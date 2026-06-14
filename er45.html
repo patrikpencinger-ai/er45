@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ER45</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<script src="https://w.soundcloud.com/player/api.js"></script>
+<meta name="description" content="A memorial for ER45.com. The lights went out, but the bass remains." />
+<style>
+  :root{
+    --bg0:#05060c; --bg1:#0a0e1c; --bg2:#101733;
+    --ink:#e9eefb; --dim:#8a93b8;
+    --green:#7bf06a; --cyan:#36d6ff; --magenta:#ff49c6; --amber:#ffb53d;
+    --stone:#9aa1ac; --stone-d:#6c727d;
+    --font:"Courier New", ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:var(--ink);font-family:var(--font);overflow:hidden;-webkit-font-smoothing:none}
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:block}
+  canvas{position:fixed;inset:0;width:100%;height:100%}
+  /* image-rendering pixelated for that pixel-art crunch */
+  #fx{image-rendering:pixelated}
+
+  .overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+
+  /* ---------- Enter gate ---------- */
+  #gate{background:radial-gradient(120% 120% at 50% 40%, rgba(10,14,28,.4), #03040a 75%);pointer-events:auto;z-index:50;transition:opacity .8s ease}
+  #gate.hide{opacity:0;pointer-events:none}
+  #gate h1{font-size:clamp(28px,8vw,72px);letter-spacing:.18em;margin:0;color:var(--green);text-shadow:0 0 18px rgba(123,240,106,.55), 0 4px 0 #0c2b0a}
+  #gate p{color:var(--dim);letter-spacing:.25em;margin:.6em 0 2.2em;font-size:clamp(11px,2.4vw,15px)}
+  .enterBtn{pointer-events:auto;cursor:pointer;border:2px solid var(--green);background:rgba(123,240,106,.08);color:var(--green);
+    font-family:var(--font);font-weight:bold;letter-spacing:.2em;font-size:clamp(13px,3vw,18px);padding:.9em 2.2em;border-radius:4px;
+    text-transform:uppercase;box-shadow:0 0 24px rgba(123,240,106,.25), inset 0 0 18px rgba(123,240,106,.08);animation:throb 1.6s ease-in-out infinite}
+  .enterBtn:hover{background:rgba(123,240,106,.18);box-shadow:0 0 40px rgba(123,240,106,.5)}
+  @keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  #gate small{display:block;color:#55607f;letter-spacing:.15em;margin-top:2.4em;font-size:11px;max-width:340px;line-height:1.6;text-align:center}
+
+  /* ---------- HUD / tombstone text ---------- */
+  #hud{z-index:20}
+  .epitaph{position:absolute;top:12%;left:50%;transform:translateX(-50%);text-align:center;
+    width:min(86vw,460px);padding:38px 26px 26px;pointer-events:none;
+    background:linear-gradient(180deg,#41474f,#2b3038 78%,#252a31);
+    border-radius:46% 46% 8px 8px / 26% 26% 6px 6px;
+    box-shadow:inset 4px 0 0 rgba(255,255,255,.07), inset -4px 0 0 rgba(0,0,0,.45),
+      0 9px 0 #1b1e24, 0 13px 0 #14171c, 0 18px 30px rgba(0,0,0,.6);
+    image-rendering:pixelated}
+  .epitaph .rip{font-size:clamp(15px,3.4vw,24px);letter-spacing:.5em;color:#cdd2da;text-shadow:0 2px 0 #16181d}
+  .epitaph .name{font-size:clamp(30px,8.5vw,62px);letter-spacing:.02em;color:var(--green);font-weight:bold;
+    text-shadow:0 0 18px rgba(123,240,106,.55), 0 4px 0 #0a2208, 0 5px 10px rgba(0,0,0,.7);margin:.08em 0}
+  .epitaph .line{font-size:clamp(11px,2.6vw,16px);color:#dfe4ee;font-style:italic;text-shadow:0 2px 3px #16181d;margin-top:.3em}
+  .epitaph .era{margin-top:.7em;font-size:clamp(10px,2.2vw,14px);letter-spacing:.28em;color:#9aa1ac}
+
+  /* ---------- Bottom dock ---------- */
+  #dock{position:absolute;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:auto;z-index:30;width:min(94vw,820px)}
+  .respects{display:flex;align-items:center;gap:12px}
+  #payBtn{cursor:pointer;border:2px solid #cfd6e6;background:linear-gradient(#171c2e,#0c1020);color:#eef2ff;font-family:var(--font);
+    font-weight:bold;letter-spacing:.18em;font-size:clamp(13px,2.8vw,17px);padding:.75em 1.8em;border-radius:5px;text-transform:uppercase;
+    box-shadow:0 4px 0 #05070f, 0 0 0 1px #2a3354 inset;transition:transform .06s, box-shadow .2s}
+  #payBtn:hover{box-shadow:0 4px 0 #05070f, 0 0 22px rgba(255,73,198,.35), 0 0 0 1px #2a3354 inset}
+  #payBtn:active{transform:translateY(3px);box-shadow:0 1px 0 #05070f, 0 0 0 1px #2a3354 inset}
+  .count{color:var(--amber);letter-spacing:.12em;font-size:clamp(12px,2.6vw,15px);text-shadow:0 0 10px rgba(255,181,61,.4);white-space:nowrap}
+  .count b{color:#fff}
+
+  /* SoundCloud now-playing bar */
+  #scwrap{width:100%;max-width:540px;opacity:.92}
+  #scwrap .nowp{color:var(--green);letter-spacing:.12em;font-size:clamp(9px,2.1vw,11px);margin:0 0 5px;text-align:center;opacity:.85}
+  #scplayer{width:100%;height:60px;border:0;border-radius:8px;display:block;box-shadow:0 0 0 1px #1c2238}
+  #scwrap.fb{display:none} /* hidden when synth fallback is active */
+
+  .subline{color:#6f79a0;letter-spacing:.18em;font-size:clamp(10px,2.3vw,13px);text-align:center}
+  .subs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .subs a{pointer-events:auto;text-decoration:none;color:var(--cyan);border:1px solid rgba(54,214,255,.35);background:rgba(54,214,255,.06);
+    padding:.4em .8em;border-radius:999px;font-size:clamp(10px,2.2vw,12px);letter-spacing:.1em;transition:.2s}
+  .subs a:hover{background:rgba(54,214,255,.18);box-shadow:0 0 16px rgba(54,214,255,.4);transform:translateY(-1px)}
+
+  /* ---------- top-right controls ---------- */
+  #ctrls{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:40;pointer-events:auto}
+  .icon{cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border:1px solid #2a3354;background:rgba(8,11,22,.6);
+    color:var(--ink);border-radius:8px;font-size:18px;backdrop-filter:blur(4px)}
+  .icon:hover{border-color:var(--cyan);color:var(--cyan)}
+  .icon.off{color:#55607f;border-color:#1c2238}
+
+  #toast{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.8);z-index:60;pointer-events:none;
+    color:var(--green);letter-spacing:.2em;font-size:clamp(16px,4vw,26px);text-shadow:0 0 18px rgba(123,240,106,.6);opacity:0;transition:.4s}
+  #toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+  @media (max-width:560px){ .epitaph{top:6%} }
+</style>
+</head>
+<body>
+  <canvas id="bgc"></canvas>   <!-- floor, disco dots, lasers, glow -->
+  <canvas id="fx"></canvas>    <!-- candle, embers, soul particles, EKG -->
+
+  <!-- HUD text -->
+  <div class="overlay" id="hud">
+    <div class="epitaph">
+      <div class="rip">R · I · P</div>
+      <div class="name">ER45.COM</div>
+      <div class="line">"The lights went out, but the bass remains."</div>
+      <div class="era">— END OF AN ERA · 1999–2024 —</div>
+    </div>
+  </div>
+
+  <!-- bottom dock -->
+  <div id="dock">
+    <div class="respects">
+      <button id="payBtn">✷ Pay Respects</button>
+      <div class="count"><b id="cnum">—</b> glowsticks raised</div>
+    </div>
+    <div id="scwrap">
+      <p class="nowp">♪ NOW PLAYING — DJ ROLANDO · KNIGHTS OF THE JAGUAR (BEATLESS EDIT)</p>
+      <iframe id="scplayer" allow="autoplay" scrolling="no" frameborder="no" title="SoundCloud player"></iframe>
+    </div>
+    <div class="subline">THE INFRASTRUCTURE CONTINUES IN THE SUBDOMAINS</div>
+  </div>
+
+  <!-- controls -->
+  <div id="ctrls">
+    <div class="icon" id="muteBtn" title="Mute / unmute">♪</div>
+    <div class="icon" id="fsBtn" title="Fullscreen">⤢</div>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- enter gate (needed to start audio) -->
+  <div class="overlay" id="gate">
+    <h1>ER45</h1>
+    <p>EST. 1999 · DETROIT FREQUENCIES</p>
+    <button class="enterBtn" id="enterBtn">Enter to pay respects</button>
+    <small>Sound on. DJ Rolando — "Knights of the Jaguar" (beatless edit) via SoundCloud. Click anywhere to begin.</small>
+  </div>
+
+<script>
+/* =====================================================================
+   ER45.COM — dynamic memorial
+   Visuals: canvas (audio-reactive lasers, disco, EKG, candle, embers)
+   Audio:   Web Audio synthesis — Detroit string riff homage, NO kick.
+   ===================================================================== */
+(() => {
+  const bgc = document.getElementById('bgc'), bctx = bgc.getContext('2d');
+  const fx  = document.getElementById('fx'),  fctx = fx.getContext('2d');
+  let W=0,H=0,DPR=Math.min(devicePixelRatio||1,2);
+  function resize(){
+    W=innerWidth;H=innerHeight;
+    for(const c of [bgc,fx]){ c.width=W*DPR; c.height=H*DPR; }
+    bctx.setTransform(DPR,0,0,DPR,0,0);
+    fctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  addEventListener('resize',resize);
+  // re-size whenever the page (re)gains visibility/focus or lays out late —
+  // covers background tabs/embeds that first render at zero width.
+  addEventListener('visibilitychange',()=>{ if(!document.hidden) resize(); });
+  addEventListener('pageshow',resize);
+  addEventListener('load',resize);
+  resize(); requestAnimationFrame(resize);
+
+  /* ---------------- shared beat state (drives visuals) ------------- */
+  const beat = { pulse:0, bar:0, energy:0, kickGhost:0 };
+
+  /* ====================== AUDIO ENGINE ============================ */
+  const Audio = (() => {
+    let ctx, master, verbWet, analyser, started=false, muted=false;
+    let lookahead, nextNote=0, step=0;
+    const BPM=126, stepDur=60/BPM/4; // 16th notes
+
+    // melodic homage to "Knights of the Jaguar" — emotive minor strings.
+    // F# minor-ish arpeggio cells; (kick intentionally absent).
+    const N = (n)=>440*Math.pow(2,(n-69)/12); // midi->hz
+    // a rolling, yearning arpeggio across Fm-style chords
+    const SEQ = [
+      // bar 1  (F# m)
+      54,57,61,66, 61,57,54,57, 61,66,69,66, 61,57,61,57,
+      // bar 2  (D maj7-ish)
+      50,54,57,62, 57,54,50,54, 57,62,66,62, 57,54,57,54,
+      // bar 3  (A)
+      57,61,64,69, 64,61,57,61, 64,69,73,69, 64,61,64,61,
+      // bar 4  (E -> tension)
+      52,56,59,64, 59,56,52,56, 59,64,68,64, 59,56,52,49
+    ];
+    const BASS = [54,null,null,null, 50,null,null,null, 57,null,null,null, 52,null,null,null,
+                  54,null,null,null, 50,null,null,null, 57,null,null,null, 52,null,null,null,
+                  57,null,null,null, 52,null,null,null, 49,null,null,null, 52,null,null,null,
+                  52,null,null,null, 49,null,null,null, 45,null,null,null, 47,null,null,null];
+
+    function reverbIR(seconds=3.2, decay=2.6){
+      const rate=ctx.sampleRate, len=rate*seconds, buf=ctx.createBuffer(2,len,rate);
+      for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);
+        for(let i=0;i<len;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}}
+      return buf;
+    }
+
+    function init(){
+      ctx=new (window.AudioContext||window.webkitAudioContext)();
+      master=ctx.createGain(); master.gain.value=0.0;
+      const comp=ctx.createDynamicsCompressor();
+      master.connect(comp); comp.connect(ctx.destination);
+
+      const verb=ctx.createConvolver(); verb.buffer=reverbIR();
+      verbWet=ctx.createGain(); verbWet.gain.value=0.55;
+      verb.connect(verbWet); verbWet.connect(master);
+
+      analyser=ctx.createAnalyser(); analyser.fftSize=256; analyser.connect(master);
+
+      this.busDry=ctx.createGain(); this.busDry.connect(analyser);
+      this.busWet=verb;
+      // gentle fade in
+      master.gain.linearRampToValueAtTime(0.9, ctx.currentTime+1.2);
+    }
+
+    // lush detuned-string stab
+    function string(freq,t,dur,vel=1){
+      const dry=this.busDry, wet=this.busWet;
+      const vca=ctx.createGain(); vca.gain.value=0;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass';
+      lp.frequency.setValueAtTime(700,t);
+      lp.frequency.linearRampToValueAtTime(3200,t+0.06);
+      lp.frequency.exponentialRampToValueAtTime(900,t+dur);
+      lp.Q.value=6;
+      const dets=[-7,-3,0,4,7];
+      dets.forEach(c=>{
+        const o=ctx.createOscillator(); o.type='sawtooth';
+        o.frequency.value=freq*Math.pow(2,c/1200);
+        o.connect(lp); o.start(t); o.stop(t+dur+0.1);
+      });
+      lp.connect(vca);
+      const a=0.012,d=0.12,s=0.55,r=dur*0.6;
+      vca.gain.setValueAtTime(0,t);
+      vca.gain.linearRampToValueAtTime(0.22*vel,t+a);
+      vca.gain.linearRampToValueAtTime(0.22*vel*s,t+a+d);
+      vca.gain.setValueAtTime(0.22*vel*s,t+dur);
+      vca.gain.linearRampToValueAtTime(0,t+dur+r);
+      vca.connect(dry); vca.connect(wet);
+    }
+    // round synth bass (no kick — this carries low end melodically)
+    function bass(freq,t,dur){
+      const dry=this.busDry;
+      const o=ctx.createOscillator(),o2=ctx.createOscillator();
+      o.type='sine'; o2.type='triangle'; o2.frequency.value=freq; o.frequency.value=freq/2;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=420;
+      const g=ctx.createGain(); g.gain.value=0;
+      o.connect(lp);o2.connect(lp);lp.connect(g);g.connect(dry);
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.5,t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.start(t);o2.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05);
+    }
+    // airy closed hat — keeps groove without a kick
+    function hat(t,vel=0.4){
+      const dry=this.busDry;
+      const b=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
+      const d=b.getChannelData(0); for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,8);
+      const s=ctx.createBufferSource(); s.buffer=b;
+      const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
+      const g=ctx.createGain(); g.gain.value=vel*0.18;
+      s.connect(hp);hp.connect(g);g.connect(dry); s.start(t);
+    }
+
+    function schedule(){
+      while(nextNote < ctx.currentTime + 0.12){
+        const s=step%64, t=nextNote;
+        const note=SEQ[s]; if(note) string.call(api,N(note),t,stepDur*1.9, (s%4===0?1:0.8));
+        const bn=BASS[s]; if(bn) bass.call(api,N(bn-12),t,stepDur*3.6);
+        if(s%2===1) hat.call(api,t, s%4===3?0.6:0.35);
+        // visual beat cues
+        if(s%4===0){ beat.kickGhost=1; beat.bar=(beat.bar+(s===0?1:0)); }
+        if(s%2===0){ beat.pulse=1; }
+        step=(step+1)%64; nextNote+=stepDur;
+      }
+    }
+    let timer;
+    const api={
+      busDry:null, busWet:null,
+      start(){
+        if(started) return; started=true;
+        init.call(api);
+        nextNote=ctx.currentTime+0.06; step=0;
+        timer=setInterval(schedule,25);
+      },
+      toggleMute(){
+        if(!ctx) return muted;
+        muted=!muted;
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.linearRampToValueAtTime(muted?0:0.9, ctx.currentTime+0.25);
+        return muted;
+      },
+      // hard stop — used when SoundCloud takes over
+      silence(){
+        if(timer){ clearInterval(timer); timer=null; }
+        if(ctx){ master.gain.cancelScheduledValues(ctx.currentTime);
+          master.gain.linearRampToValueAtTime(0, ctx.currentTime+0.4); }
+      },
+      // soft chime when a candle is lit
+      chime(){
+        if(!ctx||muted) return;
+        const t=ctx.currentTime, f=N(81);
+        [f,f*1.5,f*2].forEach((fr,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.type='sine';o.frequency.value=fr;o.connect(g);g.connect(api.busDry);g.connect(api.busWet);
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.12/(i+1),t+0.01);
+          g.gain.exponentialRampToValueAtTime(0.0001,t+1.4);
+          o.start(t);o.stop(t+1.5);
+        });
+      },
+      level(){ if(!analyser) return 0; const a=new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(a); let s=0; for(let i=0;i<24;i++)s+=a[i]; return s/24/255; }
+    };
+    return api;
+  })();
+
+  /* ============== MUSIC CONTROLLER (SoundCloud + synth) ==========
+     Primary: the real track via SoundCloud's embed (rights handled by SC).
+     We can't analyse cross-origin audio, so visuals pulse off the player's
+     playback POSITION instead. If the embed errors or never starts, we fall
+     back to the self-contained no-kick synth so the page is never silent.    */
+  const Music = (() => {
+    // ▼▼ SWAP THIS to use a different SoundCloud track ▼▼
+    const TRACK = 'https://soundcloud.com/genji-yoshida/dj-rolando-knights-of-the-jaguar-genji-yoshidas-beatless-edit';
+    const BPM = 130, beatDur = 60/BPM;          // visual pulse tempo
+    let widget, scReady=false, scPlaying=false, synthOn=false, muted=false, wantPlay=false;
+    let posBase=0, posTs=0, lastBeat=-1, fbTimer;
+
+    // mount the embed at LOAD so the widget is ready before the user clicks.
+    function setupSC(){
+      const ifr=document.getElementById('scplayer');
+      if(!window.SC||!SC.Widget||!ifr) return false;
+      ifr.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(TRACK)+
+        '&color=%237bf06a&auto_play=false&hide_related=true&show_comments=false'+
+        '&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+      widget=SC.Widget(ifr);
+      widget.bind(SC.Widget.Events.READY, ()=>{ scReady=true; if(wantPlay) play(); });
+      widget.bind(SC.Widget.Events.PLAY, ()=>{ scPlaying=true; stopSynth(); clearTimeout(fbTimer); });
+      widget.bind(SC.Widget.Events.PAUSE, ()=>{ scPlaying=false; });
+      widget.bind(SC.Widget.Events.PLAY_PROGRESS, e=>{ posBase=e.currentPosition/1000; posTs=performance.now(); });
+      widget.bind(SC.Widget.Events.ERROR, startSynth);
+      return true;
+    }
+    function play(){ try{ widget.setVolume(muted?0:90); widget.play(); }catch(_){} }
+
+    function startSynth(){ if(synthOn||scPlaying) return; synthOn=true; Audio.start(); }
+    function stopSynth(){ if(!synthOn) return; synthOn=false; Audio.silence(); }
+
+    // called from the Enter click (a real user gesture -> autoplay allowed)
+    function enter(){
+      if(widget){
+        wantPlay=true;
+        if(scReady) play();
+        // safety net: if SoundCloud never starts, give ambient synth.
+        // (pressing SoundCloud's own play button later will cut the synth.)
+        fbTimer=setTimeout(()=>{ if(!scPlaying) startSynth(); }, 6000);
+      } else startSynth();
+    }
+    function toggleMute(){
+      muted=!muted;
+      try{ widget&&widget.setVolume(muted?0:90); }catch(_){}
+      if(synthOn) Audio.toggleMute();
+      return muted;
+    }
+    // per-frame: produce beat.pulse / kickGhost / energy for the visuals
+    function drive(){
+      if(scPlaying){
+        const est=posBase+(performance.now()-posTs)/1000;
+        const b=Math.floor(est/beatDur);
+        if(b!==lastBeat){ lastBeat=b; beat.pulse=1; if(b%4===0){ beat.kickGhost=1; beat.bar++; } }
+        const ph=(est/beatDur)%1;
+        beat.energy=beat.energy*0.8 + (0.34+0.22*Math.sin(ph*6.283)+beat.pulse*0.2)*0.2;
+      } else if(synthOn){
+        beat.energy=beat.energy*0.85 + Audio.level()*0.15 + beat.pulse*0.1;
+      }
+    }
+    setupSC();   // mount immediately
+    return { enter, toggleMute, drive };
+  })();
+
+  /* ========= VISUAL SCENE — rendered into a low-res pixel buffer =========
+     Everything draws into a small offscreen canvas (~380px wide) then gets
+     blitted up nearest-neighbour, so the whole club gets a uniform chunky
+     pixel-art look in one pass.                                            */
+  const HUE={cyan:'54,214,255',magenta:'255,73,198',green:'123,240,106',amber:'255,181,61'};
+  const pc=document.createElement('canvas'), pctx=pc.getContext('2d');
+  let vw=380, vh=214, PSCALE=4;
+  function sizeBuffer(){
+    PSCALE=Math.max(3, Math.round(W/380));
+    vw=Math.max(140,Math.ceil(W/PSCALE)); vh=Math.max(90,Math.ceil(H/PSCALE));
+    pc.width=vw; pc.height=vh; pctx.imageSmoothingEnabled=false;
+  }
+  addEventListener('resize',sizeBuffer); sizeBuffer();
+
+  const embers=[], souls=[];   // particles, in buffer-space coords
+  let litCandles=[];
+  let platterA=0, platterB=0, ekgPhase=0;
+  // disco-ball light dots
+  const dots=[]; for(let i=0;i<60;i++) dots.push({a:Math.random()*6.283, r:Math.random(), sp:0.1+Math.random()*0.5, hue:[160,190,300,45][i%4]});
+
+  function disco(t){
+    const cx=vw*0.78, cy=vh*0.13, R=vh*0.07;
+    const g=pctx.createRadialGradient(cx,cy,0,cx,cy,R*3);
+    g.addColorStop(0,`rgba(150,180,255,${0.12+beat.energy*0.12})`);g.addColorStop(1,'rgba(0,0,0,0)');
+    pctx.fillStyle=g;pctx.beginPath();pctx.arc(cx,cy,R*3,0,7);pctx.fill();
+    const rot=t*0.0007;
+    for(let yy=-3;yy<=3;yy++)for(let xx=-3;xx<=3;xx++){
+      const fx=xx/3.2,fy=yy/3.2; if(fx*fx+fy*fy>1)continue;
+      const px=cx+fx*R,py=cy+fy*R;
+      const sh=0.4+0.6*Math.abs(Math.sin(xx*0.9+yy*0.7+rot*12+beat.bar));
+      const hue=(xx*22+yy*14+t*0.05)%360;
+      pctx.fillStyle=`hsla(${hue},85%,${40+sh*45}%,${0.6+sh*0.4})`;
+      pctx.fillRect(Math.round(px-1.5),Math.round(py-1.5),3,3);
+    }
+    pctx.strokeStyle='rgba(50,60,95,.6)';pctx.lineWidth=1;pctx.beginPath();pctx.moveTo(cx,0);pctx.lineTo(cx,cy-R);pctx.stroke();
+    // light dots flung across the room
+    pctx.save();pctx.globalCompositeOperation='lighter';
+    for(const d of dots){d.a+=0.002*d.sp;const rad=d.r*Math.max(vw,vh)*0.55;
+      const x=cx+Math.cos(d.a)*rad,y=cy+Math.sin(d.a*1.3)*rad*0.8;
+      const fl=0.5+0.5*Math.sin(t*0.004+d.a*5);
+      pctx.fillStyle=`hsla(${d.hue},90%,62%,${0.07+fl*0.16*(0.4+beat.energy)})`;
+      pctx.fillRect(x,y,2,2);}
+    pctx.restore();
+  }
+
+  function bg(t){
+    const g=pctx.createLinearGradient(0,0,0,vh);
+    g.addColorStop(0,'#05060c');g.addColorStop(0.5,'#0a0e1c');g.addColorStop(1,'#141a36');
+    pctx.fillStyle=g; pctx.fillRect(0,0,vw,vh);
+    // perspective dance-floor grid
+    const hzn=vh*0.66;
+    pctx.strokeStyle='rgba(70,90,180,.16)';pctx.lineWidth=1;
+    for(let i=-8;i<=8;i++){pctx.beginPath();pctx.moveTo(vw/2+i*(vw*0.02),hzn);pctx.lineTo(vw/2+i*(vw*0.16),vh);pctx.stroke();}
+    for(let j=0;j<8;j++){const yy=hzn+(vh-hzn)*(j/7)*(j/7);pctx.globalAlpha=0.18-j*0.02;pctx.beginPath();pctx.moveTo(0,yy);pctx.lineTo(vw,yy);pctx.stroke();}
+    pctx.globalAlpha=1;
+  }
+  // drifting low haze near the floor
+  function fog(t){
+    pctx.save();pctx.globalCompositeOperation='lighter';
+    for(let i=0;i<5;i++){const fx=((t*0.01*(i+1))%(vw+40))-20;
+      const g=pctx.createRadialGradient(fx,vh*0.9,0,fx,vh*0.9,vw*0.13);
+      g.addColorStop(0,'rgba(70,90,150,0.05)');g.addColorStop(1,'rgba(0,0,0,0)');
+      pctx.fillStyle=g;pctx.fillRect(fx-vw*0.13,vh*0.76,vw*0.26,vh*0.24);}
+    pctx.restore();
+  }
+
+  // moving-head light fixtures hung on a truss across the top
+  const heads=[ {x:0.18,h:'magenta',sp:0.0011,ph:0},   {x:0.40,h:'cyan',sp:0.0015,ph:1.7},
+                {x:0.60,h:'green',sp:0.0013,ph:3.1},    {x:0.82,h:'amber',sp:0.0017,ph:4.6} ];
+  function truss(t){
+    const ty=vh*0.05;
+    // truss bar
+    pctx.fillStyle='#161b29'; pctx.fillRect(vw*0.1,ty-2,vw*0.8,4);
+    for(let x=vw*0.1;x<vw*0.9;x+=6){pctx.fillStyle='#2a3350';pctx.fillRect(x,ty-2,2,4);}
+    // beams (additive, sweep + reactive)
+    pctx.save(); pctx.globalCompositeOperation='lighter';
+    heads.forEach(hd=>{
+      const ox=vw*hd.x, oy=ty+4, col=HUE[hd.h];
+      const ang=Math.PI/2 + Math.sin(t*hd.sp+hd.ph)*0.75;
+      const len=vh*0.95, tx=ox+Math.cos(ang)*len, tyb=oy+Math.sin(ang)*len;
+      const nx=Math.cos(ang+Math.PI/2), ny=Math.sin(ang+Math.PI/2), spread=vw*0.022*(1+beat.energy);
+      const grad=pctx.createLinearGradient(ox,oy,tx,tyb);
+      grad.addColorStop(0,`rgba(${col},${0.45+beat.energy*0.55})`);
+      grad.addColorStop(1,`rgba(${col},0)`);
+      pctx.fillStyle=grad;
+      pctx.beginPath();pctx.moveTo(ox,oy);
+      pctx.lineTo(tx+nx*spread,tyb+ny*spread);pctx.lineTo(tx-nx*spread,tyb-ny*spread);
+      pctx.closePath();pctx.fill();
+    });
+    pctx.restore();
+    // fixtures on top of the beams
+    heads.forEach(hd=>{
+      const ox=vw*hd.x, col=HUE[hd.h];
+      pctx.fillStyle='#0e121b'; pctx.fillRect(ox-3,ty-1,6,3);      // yoke
+      pctx.fillStyle='#0a0d14'; pctx.fillRect(ox-2,ty+2,4,3);      // head
+      pctx.fillStyle=`rgba(${col},${0.7+beat.pulse*0.3})`; pctx.fillRect(ox-1,ty+4,2,2); // lens
+    });
+  }
+
+  // --- DJ booth: twin turntables + mixer on a stand (lower-left) ---
+  function drawDeck(cx,cy,r,rot){
+    pctx.fillStyle='#080b11'; pctx.beginPath();pctx.arc(cx,cy,r+1,0,7);pctx.fill();
+    pctx.fillStyle='#2a2f3a'; pctx.beginPath();pctx.arc(cx,cy,r,0,7);pctx.fill();       // platter
+    pctx.fillStyle='#c9402f'; pctx.beginPath();pctx.arc(cx,cy,r*0.42,0,7);pctx.fill();  // record label
+    pctx.fillStyle='#0a0d14'; pctx.fillRect(cx-1,cy-1,2,2);                              // spindle
+    pctx.strokeStyle='#e8e8e8';pctx.lineWidth=1;                                          // spin marker
+    pctx.beginPath();pctx.moveTo(cx,cy);pctx.lineTo(cx+Math.cos(rot)*r*0.9,cy+Math.sin(rot)*r*0.9);pctx.stroke();
+    pctx.strokeStyle='#9aa1ac';                                                           // tonearm
+    pctx.beginPath();pctx.moveTo(cx+r,cy-r);pctx.lineTo(cx+r*0.25,cy+r*0.35);pctx.stroke();
+  }
+  function djbooth(t){
+    const bx=vw*0.05, by=vh*0.62, bw=vw*0.27, bh=vh*0.1;
+    pctx.fillStyle='#0c0f17'; pctx.fillRect(bx+4,by+bh,3,vh-by-bh); pctx.fillRect(bx+bw-7,by+bh,3,vh-by-bh); // legs
+    pctx.fillStyle='#161b27'; pctx.fillRect(bx,by,bw,bh);                                 // table
+    pctx.fillStyle='#222838'; pctx.fillRect(bx,by,bw,2);
+    platterA+=0.05; platterB+=0.045;
+    drawDeck(bx+bw*0.17, by+bh*0.52, bh*0.4, platterA);
+    drawDeck(bx+bw*0.83, by+bh*0.52, bh*0.4, platterB);
+    // mixer in the middle
+    const mx=bx+bw*0.41, mw=bw*0.18;
+    pctx.fillStyle='#0d1119'; pctx.fillRect(mx,by+1,mw,bh-2);
+    for(let i=0;i<3;i++){ const fxx=mx+3+i*((mw-6)/3);
+      pctx.fillStyle='#2b3450'; pctx.fillRect(fxx,by+3,1,bh-8);                            // fader track
+      const fy=by+3+(0.5+0.5*Math.sin(t*0.005+i*2))*(bh-10);
+      pctx.fillStyle='#7bf06a'; pctx.fillRect(fxx-1,fy,3,2); }                             // fader cap
+    // VU meter above the mixer, reacts to the beat
+    const vu=Math.min(1, beat.energy*1.5+beat.pulse*0.5);
+    for(let i=0;i<4;i++){ const on=vu>i/4;
+      pctx.fillStyle=on?(i<2?'#7bf06a':i<3?'#ffb53d':'#ff4949'):'#20263a';
+      pctx.fillRect(mx+2+i*((mw-4)/4),by-3,((mw-4)/4)-1,2); }
+  }
+
+  // --- stacked speaker rig (lower-right), woofers punch on the beat ---
+  function speakers(t){
+    const cw=vw*0.13, ch=vh*0.19, sx=vw*0.80, base=vh*0.93;
+    const punch=beat.kickGhost*0.16+beat.energy*0.12;
+    for(let k=0;k<2;k++){
+      const cx=sx, cy=base-ch*(k+1)-k*2;
+      pctx.fillStyle=k?'#15181f':'#191d26'; pctx.fillRect(cx,cy,cw,ch);
+      pctx.fillStyle='#0a0c11'; pctx.fillRect(cx,cy,cw,2);
+      const wr=cw*0.32*(1+punch), wx=cx+cw*0.5, wy=cy+ch*0.62;
+      pctx.fillStyle='#0a0c11';pctx.beginPath();pctx.arc(wx,wy,wr+2,0,7);pctx.fill();
+      pctx.fillStyle='#2a2f3b';pctx.beginPath();pctx.arc(wx,wy,wr,0,7);pctx.fill();        // cone
+      pctx.fillStyle='#14171d';pctx.beginPath();pctx.arc(wx,wy,wr*0.45,0,7);pctx.fill();   // dust cap
+      pctx.fillStyle='#3a4150'; pctx.fillRect(cx+cw*0.5-2,cy+ch*0.16,4,4);                 // tweeter
+    }
+    pctx.fillStyle='#0c0f17'; pctx.fillRect(sx+cw*0.4,base-2,4,vh-base+2);                 // pole
+  }
+
+  // heartbeat lines — "the bass remains" pulse, faint behind the scene
+  const ekgs=[{y:0.21,col:'cyan',sp:1.0},{y:0.88,col:'magenta',sp:1.3}];
+  function ekg(t){
+    ekgPhase+=0.02*(1+beat.energy*2);
+    pctx.save();pctx.globalCompositeOperation='lighter';
+    ekgs.forEach((e,k)=>{
+      const baseY=e.y*vh, col=HUE[e.col], amp=vh*0.06;
+      pctx.strokeStyle=`rgba(${col},.45)`;pctx.lineWidth=1;pctx.beginPath();
+      for(let x=0;x<=vw;x+=2){
+        const p=(x/vw*6 - ekgPhase*e.sp + k);
+        const frac=((p%1)+1)%1;
+        let y=baseY;
+        if(frac>0.45&&frac<0.55){const s=(frac-0.45)/0.10; y=baseY-(s<0.5?s*2:(1-s)*2)*amp*(0.5+beat.pulse);}
+        else y=baseY+Math.sin(p*6)*1;
+        x===0?pctx.moveTo(x,y):pctx.lineTo(x,y);
+      }
+      pctx.stroke();
+    });
+    pctx.restore();
+  }
+
+  // a single glowstick (neon tube + halo), leaning by `lean` radians
+  function drawStick(bx,by,len,w,hue,glow,lean){
+    const tx=bx+Math.sin(lean)*len, ty=by-Math.cos(lean)*len;
+    const mx=(bx+tx)/2, my=(by+ty)/2;
+    const g=pctx.createRadialGradient(mx,my,0,mx,my,len*1.3);
+    g.addColorStop(0,`hsla(${hue},100%,60%,${0.16+glow*0.28})`);
+    g.addColorStop(1,`hsla(${hue},100%,60%,0)`);
+    pctx.fillStyle=g;pctx.beginPath();pctx.arc(mx,my,len*1.3,0,7);pctx.fill();
+    pctx.lineCap='round';
+    pctx.strokeStyle=`hsla(${hue},90%,42%,.9)`;  pctx.lineWidth=w+2; pctx.beginPath();pctx.moveTo(bx,by);pctx.lineTo(tx,ty);pctx.stroke();
+    pctx.strokeStyle=`hsla(${hue},100%,70%,.95)`; pctx.lineWidth=w;   pctx.beginPath();pctx.moveTo(bx,by);pctx.lineTo(tx,ty);pctx.stroke();
+    pctx.strokeStyle=`hsla(${hue},100%,93%,.95)`; pctx.lineWidth=Math.max(1,w*0.4); pctx.beginPath();pctx.moveTo(bx,by);pctx.lineTo(tx,ty);pctx.stroke();
+    pctx.lineCap='butt';
+  }
+  // eternal lightstick in front of the stone + glowsticks raised for respects
+  function lightstick(t){
+    const cx=vw/2, baseY=vh*0.74, len=Math.min(vw,vh)*0.15, w=Math.max(2,vw*0.013);
+    const glow=0.4+0.3*Math.sin(t*0.02)+beat.energy, lean=Math.sin(t*0.0016)*0.22;
+    drawStick(cx,baseY,len,w,150,glow,lean);
+    // occasional rising glow mote in the stick's colour
+    if(Math.random()<0.25){ const tx=cx+Math.sin(lean)*len, ty=baseY-Math.cos(lean)*len;
+      embers.push({x:tx+(Math.random()-0.5)*w*2,y:ty,vy:-0.15-Math.random()*0.2,vx:(Math.random()-0.5)*0.1,life:1,hue:150+Math.random()*40}); }
+    // a raised glowstick for every respect paid
+    litCandles.forEach(lc=>{
+      const bx=cx+lc.dx, by=baseY+lc.dy, sl=Math.min(vw,vh)*0.075, sw=Math.max(1,w*0.7);
+      drawStick(bx,by,sl,sw,lc.hue,0.5+0.3*Math.sin(t*0.02+lc.ph),Math.sin(t*0.0016+lc.ph)*0.5);
+    });
+  }
+
+  function particles(t){
+    for(let i=embers.length-1;i>=0;i--){const e=embers[i];
+      e.x+=e.vx;e.y+=e.vy;e.life-=0.012;
+      if(e.life<=0){embers.splice(i,1);continue;}
+      pctx.fillStyle=`hsla(${e.hue},100%,60%,${e.life})`;
+      pctx.fillRect(Math.round(e.x),Math.round(e.y),1,1);
+    }
+    for(let i=souls.length-1;i>=0;i--){const s=souls[i];
+      s.y+=s.vy;s.x+=Math.sin(s.y*0.05)*0.2;s.life-=0.006;
+      if(s.life<=0){souls.splice(i,1);continue;}
+      pctx.globalAlpha=s.life;pctx.fillStyle='rgba(123,240,106,.95)';
+      pctx.fillRect(Math.round(s.x),Math.round(s.y),2,2);
+      pctx.globalAlpha=1;
+    }
+  }
+
+  /* ---------------- main loop ---------------- */
+  function frame(t){
+    // decay beat cues, then let the active music source drive energy/pulse
+    beat.pulse*=0.86; beat.kickGhost*=0.9;
+    Music.drive();
+
+    // paint the whole club into the low-res buffer
+    bg(t); fog(t); ekg(t); truss(t); disco(t);
+    djbooth(t); speakers(t); lightstick(t); particles(t);
+
+    // blit up, nearest-neighbour -> chunky pixels
+    bctx.imageSmoothingEnabled=false;
+    bctx.clearRect(0,0,W,H);
+    bctx.drawImage(pc,0,0,vw,vh,0,0,W,H);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ====================== INTERACTION ============================ */
+  const KEY='er45_respects';
+  function getCount(){ return parseInt(localStorage.getItem(KEY)||'0',10); }
+  function setCount(n){ localStorage.setItem(KEY,String(n)); document.getElementById('cnum').textContent=n.toLocaleString(); }
+  setCount(getCount());
+
+  const toast=document.getElementById('toast');
+  function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1100); }
+
+  function payRespects(){
+    setCount(getCount()+1);
+    Audio.chime();
+    // release a soul + raise a glowstick near the stone (buffer-space coords)
+    souls.push({x:vw/2+(Math.random()-0.5)*vw*0.06,y:vh*0.66,vy:-0.35-Math.random()*0.25,life:1});
+    if(litCandles.length<14){
+      const side=litCandles.length%2?1:-1, idx=Math.floor(litCandles.length/2);
+      const hue=[150,190,300,45,275][litCandles.length%5];
+      litCandles.push({dx:side*(vw*0.03+idx*vw*0.022),dy:vh*0.02+Math.sin(idx)*vh*0.01,ph:Math.random()*6,hue});
+    }
+    showToast('✷ GLOWSTICK RAISED');
+  }
+  document.getElementById('payBtn').addEventListener('click',payRespects);
+
+  // enter gate -> start audio
+  const gate=document.getElementById('gate');
+  function enter(){
+    Music.enter();
+    gate.classList.add('hide');
+    setTimeout(()=>gate.style.display='none',900);
+  }
+  document.getElementById('enterBtn').addEventListener('click',enter);
+  gate.addEventListener('click',(e)=>{ if(e.target===gate) enter(); });
+
+  // mute
+  const muteBtn=document.getElementById('muteBtn');
+  muteBtn.addEventListener('click',()=>{ const m=Music.toggleMute(); muteBtn.classList.toggle('off',m); muteBtn.textContent=m?'♪̶':'♪'; });
+
+  // fullscreen
+  document.getElementById('fsBtn').addEventListener('click',()=>{
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
+
+  // spacebar = pay respects
+  addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault(); if(gate.style.display!=='none') enter(); else payRespects();} });
+})();
+</script>
+</body>
+</html>
