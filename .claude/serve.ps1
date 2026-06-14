@@ -13,6 +13,7 @@ while ($listener.IsListening) {
     $path = [System.Uri]::UnescapeDataString($ctx.Request.Url.LocalPath).TrimStart('/')
     if ($path -eq '') { $path = 'er45.html' }   # memorial is the root document
     $file = Join-Path $root $path
+    if (Test-Path $file -PathType Container) { $file = Join-Path $file 'index.html' }  # /archive/ -> /archive/index.html
     if (Test-Path $file -PathType Leaf) {
       $bytes = [System.IO.File]::ReadAllBytes($file)
       $ext = [System.IO.Path]::GetExtension($file).ToLower()
