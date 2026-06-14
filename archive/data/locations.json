@@ -1,0 +1,3062 @@
+﻿[
+    {
+        "id":  1,
+        "name":  "Tvornica",
+        "address":  "Šubićeva 2, Zagreb",
+        "web":  "hhttp://www.corner.hr/tvornica/tvornica.asp"
+    },
+    {
+        "id":  2,
+        "name":  "The Best",
+        "address":  "Jarunska 5, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  3,
+        "name":  "Kulušić",
+        "address":  "Hrvojeva 6, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  4,
+        "name":  "Gjuro II",
+        "address":  "Medveščak 2, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  5,
+        "name":  "Aquarius",
+        "address":  "Jarunska Obala bb, Zagreb",
+        "web":  "http://www.aquarius.hr/club.html"
+    },
+    {
+        "id":  6,
+        "name":  "Tucman",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  7,
+        "name":  "Sokol",
+        "address":  "Trg maršala Tita 6, Zagreb",
+        "web":  "http://www.sokolklub.hr/"
+    },
+    {
+        "id":  8,
+        "name":  "Grič",
+        "address":  "Dobriše Cesarića 18, Samobor",
+        "web":  ""
+    },
+    {
+        "id":  9,
+        "name":  "Fun Academy",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  10,
+        "name":  "Fort Bourguignon",
+        "address":  "Pula",
+        "web":  "http://www.fortbourguignon.com"
+    },
+    {
+        "id":  11,
+        "name":  "Oxygene",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  12,
+        "name":  "Barutana",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  13,
+        "name":  "Močvara",
+        "address":  "Trnjanski nasip bb, Zagreb",
+        "web":  "http://www.urk.hr"
+    },
+    {
+        "id":  14,
+        "name":  "OTV Klub",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  15,
+        "name":  "Planet",
+        "address":  "Ivekovićeva bb, Sesvete, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  16,
+        "name":  "Ambasada Gavioli",
+        "address":  "Izola (SLO)",
+        "web":  "http://www.ambasada-gavioli.com/"
+    },
+    {
+        "id":  17,
+        "name":  "Dali Club",
+        "address":  "Sisak",
+        "web":  ""
+    },
+    {
+        "id":  18,
+        "name":  "Aurora",
+        "address":  "Primošten",
+        "web":  "http://www.auroraclub.hr"
+    },
+    {
+        "id":  19,
+        "name":  "Cezar (SLO)",
+        "address":  "Maribor",
+        "web":  ""
+    },
+    {
+        "id":  20,
+        "name":  "Propaganda",
+        "address":  "Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  21,
+        "name":  "K4",
+        "address":  "Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  22,
+        "name":  "Mama",
+        "address":  "Preradovićeva 18, Zagreb",
+        "web":  "http://mama.mi2.hr"
+    },
+    {
+        "id":  23,
+        "name":  "Stella",
+        "address":  "Zabok",
+        "web":  ""
+    },
+    {
+        "id":  24,
+        "name":  "eXtravaganza",
+        "address":  "Varaždin",
+        "web":  "http://www.extravaganzaweb.com"
+    },
+    {
+        "id":  25,
+        "name":  "Subsub",
+        "address":  "Celovska 25, Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  26,
+        "name":  "Stella (St)",
+        "address":  "Poljud, Split",
+        "web":  ""
+    },
+    {
+        "id":  27,
+        "name":  "Aquarius (Medulin)",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  28,
+        "name":  "Oasis",
+        "address":  "Verudela, Pula",
+        "web":  ""
+    },
+    {
+        "id":  29,
+        "name":  "Amanita",
+        "address":  "Ivanić Grad",
+        "web":  ""
+    },
+    {
+        "id":  30,
+        "name":  "Mungos",
+        "address":  "Kašina, Zagreb",
+        "web":  "http://www.mungos-kashina.com"
+    },
+    {
+        "id":  32,
+        "name":  "Dom Željezničara (Os)",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  34,
+        "name":  "Lamparna",
+        "address":  "Labin",
+        "web":  ""
+    },
+    {
+        "id":  35,
+        "name":  "Kset",
+        "address":  "Unska 3, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  36,
+        "name":  "Metropolis",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  40,
+        "name":  "Area",
+        "address":  "Selska 133, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  42,
+        "name":  "Hrvatski Dom",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  45,
+        "name":  "Valinor",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  47,
+        "name":  "Industria",
+        "address":  "Donji Grad, Osijek",
+        "web":  ""
+    },
+    {
+        "id":  48,
+        "name":  "Vega",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  50,
+        "name":  "Gradski bazeni (Osijek)",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  51,
+        "name":  "Crossroad",
+        "address":  "Malinska, Otok Krk",
+        "web":  ""
+    },
+    {
+        "id":  52,
+        "name":  "Night",
+        "address":  "Vodice",
+        "web":  ""
+    },
+    {
+        "id":  53,
+        "name":  "SternRadio",
+        "address":  "Berlin",
+        "web":  "http://www.no-ufos.de/sternradio/seiten/home.htm"
+    },
+    {
+        "id":  54,
+        "name":  "Točka",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  55,
+        "name":  "Paradiso",
+        "address":  "Dobova (Slo)",
+        "web":  ""
+    },
+    {
+        "id":  56,
+        "name":  "barka Sidro",
+        "address":  "Ispod Savskog mosta, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  57,
+        "name":  "Downtown",
+        "address":  "Križevci",
+        "web":  ""
+    },
+    {
+        "id":  58,
+        "name":  "Mala Scena",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  59,
+        "name":  "Klub 100",
+        "address":  "Zagrebačka 37, Velika Gorica",
+        "web":  ""
+    },
+    {
+        "id":  64,
+        "name":  "Quorum House",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  65,
+        "name":  "Conty",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  66,
+        "name":  "Saturn",
+        "address":  "Jastrebarsko",
+        "web":  ""
+    },
+    {
+        "id":  67,
+        "name":  "Zagrebački Velesajam",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  68,
+        "name":  "Bel Caffe",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  69,
+        "name":  "Frankopan",
+        "address":  "Petrakovo Brdo 23a, Duga Resa",
+        "web":  ""
+    },
+    {
+        "id":  70,
+        "name":  "Bronx",
+        "address":  "Vrbovec",
+        "web":  ""
+    },
+    {
+        "id":  71,
+        "name":  "Gotham",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  72,
+        "name":  "Sarajevo",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  73,
+        "name":  "Radost FX",
+        "address":  "Prag (CZ), Belehradska 120, češka",
+        "web":  "http://www.radostfx.cz"
+    },
+    {
+        "id":  74,
+        "name":  "Beat CZ",
+        "address":  "Prag (CZ), češka",
+        "web":  " http://www.beat.cz"
+    },
+    {
+        "id":  75,
+        "name":  "L Anfer",
+        "address":  "Dijon (FR)",
+        "web":  " http://www.an-fer.com"
+    },
+    {
+        "id":  76,
+        "name":  "Lazareti",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  77,
+        "name":  "Hala Golovec",
+        "address":  "Celje",
+        "web":  ""
+    },
+    {
+        "id":  78,
+        "name":  "Bar \"Double Trouble\"",
+        "address":  "Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  79,
+        "name":  "Attack",
+        "address":  "Trnjanski nasip bb., Zagreb",
+        "web":  "http://www.attack.hr/"
+    },
+    {
+        "id":  80,
+        "name":  "Labirint",
+        "address":  "Sarajevo, BiH",
+        "web":  ""
+    },
+    {
+        "id":  81,
+        "name":  "Esperanza",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  82,
+        "name":  "Dortmund, Mayday Hall",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  83,
+        "name":  "Ghetto - Metlika",
+        "address":  "Bela Krajina (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  84,
+        "name":  "Dali (Medulin)",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  85,
+        "name":  "Simfonija",
+        "address":  "Postojna (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  87,
+        "name":  "Mondo",
+        "address":  "Beograd (YU)",
+        "web":  ""
+    },
+    {
+        "id":  88,
+        "name":  "Aquarius (YU)",
+        "address":  "Novi SAD (YU)",
+        "web":  ""
+    },
+    {
+        "id":  89,
+        "name":  "Anderground",
+        "address":  "Beograd (YU)",
+        "web":  ""
+    },
+    {
+        "id":  90,
+        "name":  "Garage",
+        "address":  "Kragujevac (YU)",
+        "web":  ""
+    },
+    {
+        "id":  91,
+        "name":  "Mladost",
+        "address":  "Tuzla (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  92,
+        "name":  "Channel Zero",
+        "address":  "Metelkova, Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  93,
+        "name":  "Disco Bar Oko",
+        "address":  "Spišić Bukovica, Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  96,
+        "name":  "strelište",
+        "address":  "OSIJEK",
+        "web":  ""
+    },
+    {
+        "id":  98,
+        "name":  "Mikulići",
+        "address":  "Dvorac Mikulići, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  99,
+        "name":  "Vanadis",
+        "address":  "Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  100,
+        "name":  "dvorac Dubovac",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  101,
+        "name":  "Cream",
+        "address":  "Nova Gorica (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  102,
+        "name":  "Papilon",
+        "address":  "Koprivnica",
+        "web":  ""
+    },
+    {
+        "id":  103,
+        "name":  "Style",
+        "address":  "čakovec",
+        "web":  ""
+    },
+    {
+        "id":  104,
+        "name":  "Skenderija",
+        "address":  "Bivši Dom omladine, Sarajevo (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  105,
+        "name":  "Incognito",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  106,
+        "name":  "Fun",
+        "address":  "Županja",
+        "web":  ""
+    },
+    {
+        "id":  107,
+        "name":  "Maraton",
+        "address":  "Karting Centar Špansko, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  108,
+        "name":  "Night Bar Cult Pomer",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  109,
+        "name":  "Ram, caffe bar",
+        "address":  "Kutina",
+        "web":  ""
+    },
+    {
+        "id":  110,
+        "name":  "Red Hall Velenje",
+        "address":  "Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  112,
+        "name":  "Pula",
+        "address":  "Pula",
+        "web":  "http://www.pula.net"
+    },
+    {
+        "id":  114,
+        "name":  "AVALANCHE CLUB",
+        "address":  "LES 2 ALPES, France",
+        "web":  ""
+    },
+    {
+        "id":  115,
+        "name":  "Diogenes",
+        "address":  "Gajnice, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  116,
+        "name":  "Gradska Kavana (ZG)",
+        "address":  "Trg Bana Jelačića, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  118,
+        "name":  "Piramida",
+        "address":  "Verudela, Pula",
+        "web":  ""
+    },
+    {
+        "id":  122,
+        "name":  "bazeni Copacabana",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  123,
+        "name":  "Club Tufna",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  124,
+        "name":  "Sportski Aerodrom",
+        "address":  "Pula, Medulin",
+        "web":  ""
+    },
+    {
+        "id":  125,
+        "name":  "Ponikve",
+        "address":  "livada Ponikve iznad Gajnica, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  126,
+        "name":  "Hala Rikard Benčić",
+        "address":  "Vežica, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  127,
+        "name":  "Pauk",
+        "address":  "Studentski centar",
+        "web":  ""
+    },
+    {
+        "id":  128,
+        "name":  "Villa Club",
+        "address":  "Poreč",
+        "web":  ""
+    },
+    {
+        "id":  129,
+        "name":  "Summer Club Medulin",
+        "address":  "Medulin",
+        "web":  ""
+    },
+    {
+        "id":  130,
+        "name":  "Dom Mladih (Sarajevo)",
+        "address":  "Bosna i Hercegovina",
+        "web":  ""
+    },
+    {
+        "id":  131,
+        "name":  "5. element",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  132,
+        "name":  "Matrix",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  133,
+        "name":  "beach bar Buba",
+        "address":  "Makarska",
+        "web":  ""
+    },
+    {
+        "id":  134,
+        "name":  "Vienna",
+        "address":  "Maribor, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  135,
+        "name":  "Tenis Centar Lukavac",
+        "address":  "Tuzla, BiH",
+        "web":  ""
+    },
+    {
+        "id":  136,
+        "name":  "Gortanova uvala",
+        "address":  "šetalište \"Lungo Mare\", Pula",
+        "web":  ""
+    },
+    {
+        "id":  137,
+        "name":  "Kanal Sava-Odra",
+        "address":  "Blato, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  139,
+        "name":  "jezero čiee",
+        "address":  "Velika Gorica",
+        "web":  ""
+    },
+    {
+        "id":  140,
+        "name":  "Fortica",
+        "address":  "Hvar",
+        "web":  ""
+    },
+    {
+        "id":  141,
+        "name":  "Levis Store",
+        "address":  "Jelačićev Trg 8, Zagreb",
+        "web":  "http://www.levis.com"
+    },
+    {
+        "id":  142,
+        "name":  "Sea Star Club",
+        "address":  "Barbariga",
+        "web":  ""
+    },
+    {
+        "id":  144,
+        "name":  "Papagaj",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  145,
+        "name":  "Irma Caffe",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  146,
+        "name":  "Strada",
+        "address":  "Opuzen",
+        "web":  ""
+    },
+    {
+        "id":  147,
+        "name":  "Lipa",
+        "address":  "Sp.Pirniče (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  148,
+        "name":  "ŠRC Zaprešić",
+        "address":  " Zaprešić",
+        "web":  ""
+    },
+    {
+        "id":  149,
+        "name":  "Zeleni Gaj",
+        "address":  "Nova Gorica (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  150,
+        "name":  "Šator na Jarunu - Viva Piva",
+        "address":  "Jarunska obala bb, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  151,
+        "name":  "Faces",
+        "address":  "Bol, Brač",
+        "web":  ""
+    },
+    {
+        "id":  152,
+        "name":  "Lapidarij",
+        "address":  "Gornji grad, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  153,
+        "name":  "Dom sportova",
+        "address":  "Trg sportova, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  154,
+        "name":  "Rotor club",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  155,
+        "name":  "Saturnus",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  156,
+        "name":  "Club F1",
+        "address":  "Trogir",
+        "web":  ""
+    },
+    {
+        "id":  157,
+        "name":  "plaža Žnjan",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  158,
+        "name":  "Centar Jelenovac",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  159,
+        "name":  "Veneranda",
+        "address":  "otok Hvar",
+        "web":  ""
+    },
+    {
+        "id":  160,
+        "name":  "Ambrella beach",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  161,
+        "name":  "Pekarna",
+        "address":  "Maribor",
+        "web":  ""
+    },
+    {
+        "id":  162,
+        "name":  "bazen Ilirija",
+        "address":  "Biograd",
+        "web":  ""
+    },
+    {
+        "id":  163,
+        "name":  "Heaven",
+        "address":  "Maksimirska 128",
+        "web":  ""
+    },
+    {
+        "id":  164,
+        "name":  "šator Viva piva",
+        "address":  "Jarun, južna obala",
+        "web":  ""
+    },
+    {
+        "id":  165,
+        "name":  "La Divinae Follie",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  168,
+        "name":  "Afrika",
+        "address":  "Trebnje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  169,
+        "name":  "Pješčana Plaža",
+        "address":  "Orebić, Pelješac",
+        "web":  ""
+    },
+    {
+        "id":  171,
+        "name":  "Ambrella Verudela",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  172,
+        "name":  "Punta Bajlo",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  173,
+        "name":  "Trg Hrvatske Republike",
+        "address":  "Korzo, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  174,
+        "name":  "Vuhedol d.o.o. skladište",
+        "address":  "Vukovar",
+        "web":  ""
+    },
+    {
+        "id":  175,
+        "name":  "Bastion",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  176,
+        "name":  "Babin Kuk",
+        "address":  "Put Vatroslava Lisinskog, Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  177,
+        "name":  "LP Discoteque",
+        "address":  "Novi Vinodolski",
+        "web":  ""
+    },
+    {
+        "id":  178,
+        "name":  "Kope Klub",
+        "address":  "Grmovskov Dom, Slovenj Gradec (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  180,
+        "name":  "Sperone",
+        "address":  "Novigrad",
+        "web":  ""
+    },
+    {
+        "id":  181,
+        "name":  "International Club",
+        "address":  "Poreč",
+        "web":  ""
+    },
+    {
+        "id":  182,
+        "name":  "Casablanca",
+        "address":  "Celje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  183,
+        "name":  "House Angels",
+        "address":  "Rovinj (brod na rivi)",
+        "web":  ""
+    },
+    {
+        "id":  184,
+        "name":  "Horse Center Loborika",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  185,
+        "name":  "Heaven (slo)",
+        "address":  "Slovenija, Trebija 19",
+        "web":  ""
+    },
+    {
+        "id":  186,
+        "name":  "Valentino",
+        "address":  "Zagreb, hotel Holliday, Ljubljanska bb",
+        "web":  ""
+    },
+    {
+        "id":  187,
+        "name":  "Leut",
+        "address":  "Privlaka",
+        "web":  ""
+    },
+    {
+        "id":  188,
+        "name":  "Brod - Foša",
+        "address":  "Dugo otok",
+        "web":  ""
+    },
+    {
+        "id":  189,
+        "name":  "Termopolis",
+        "address":  "Terme čatež, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  190,
+        "name":  "dvorac Lukavec",
+        "address":  "Lukavec",
+        "web":  ""
+    },
+    {
+        "id":  191,
+        "name":  "plaža Zrće",
+        "address":  "Novalja, otok Pag",
+        "web":  ""
+    },
+    {
+        "id":  193,
+        "name":  "Japa centar",
+        "address":  "čakovec",
+        "web":  ""
+    },
+    {
+        "id":  194,
+        "name":  "Max",
+        "address":  "Hvar",
+        "web":  ""
+    },
+    {
+        "id":  195,
+        "name":  "Citadela",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  196,
+        "name":  "Vila Rebar",
+        "address":  "Zagreb, Sljeme",
+        "web":  ""
+    },
+    {
+        "id":  197,
+        "name":  "Barfly",
+        "address":  "čakovec",
+        "web":  ""
+    },
+    {
+        "id":  198,
+        "name":  "Stuk",
+        "address":  "Maribor",
+        "web":  ""
+    },
+    {
+        "id":  199,
+        "name":  "Kulturni centar Caritas",
+        "address":  "Albaharijeva 2, Knežija, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  200,
+        "name":  "Martin Krpan klub",
+        "address":  "Maribor",
+        "web":  ""
+    },
+    {
+        "id":  201,
+        "name":  "Blue Star",
+        "address":  "Duga Resa",
+        "web":  ""
+    },
+    {
+        "id":  202,
+        "name":  "Tesmo club",
+        "address":  "Dobova",
+        "web":  ""
+    },
+    {
+        "id":  203,
+        "name":  "Royal club",
+        "address":  "čakovec",
+        "web":  ""
+    },
+    {
+        "id":  204,
+        "name":  "Rocky",
+        "address":  "Gradac",
+        "web":  ""
+    },
+    {
+        "id":  205,
+        "name":  "Cafe Belvedere",
+        "address":  "Bled, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  206,
+        "name":  "Hala Tivoli",
+        "address":  "Ljubljana",
+        "web":  ""
+    },
+    {
+        "id":  207,
+        "name":  "uvala na otoku Hvaru",
+        "address":  "Hvar, Jelsa",
+        "web":  ""
+    },
+    {
+        "id":  208,
+        "name":  "Up \u0026 Down",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  209,
+        "name":  "Rio, caffe bar",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  210,
+        "name":  "ŠRC Mocire",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  211,
+        "name":  "Forum",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  212,
+        "name":  "klub Venus",
+        "address":  "Nin",
+        "web":  ""
+    },
+    {
+        "id":  213,
+        "name":  "tunel Grič",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  214,
+        "name":  "?uro ?aković",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  215,
+        "name":  "Kula sv. Križ",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  216,
+        "name":  "Imperius",
+        "address":  "Izlake (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  217,
+        "name":  "Playboy",
+        "address":  "Virje (kraj Koprivnice)",
+        "web":  ""
+    },
+    {
+        "id":  218,
+        "name":  "Kamenica (plaža)",
+        "address":  "Komiža, Vis.",
+        "web":  ""
+    },
+    {
+        "id":  219,
+        "name":  "Preluka",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  220,
+        "name":  "Kopito",
+        "address":  "Hvar",
+        "web":  ""
+    },
+    {
+        "id":  221,
+        "name":  "@RT Caffe",
+        "address":  "Pregrada",
+        "web":  ""
+    },
+    {
+        "id":  222,
+        "name":  "Ponta Sv. Liberana",
+        "address":  "Viganj, Pelješac",
+        "web":  ""
+    },
+    {
+        "id":  224,
+        "name":  "centar Tegra",
+        "address":  "čakovec",
+        "web":  ""
+    },
+    {
+        "id":  225,
+        "name":  "Pampas",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  227,
+        "name":  "Dvorana Slovan",
+        "address":  "Ljubljana",
+        "web":  ""
+    },
+    {
+        "id":  228,
+        "name":  "Faust",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  229,
+        "name":  "Kartodrom - Poljud",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  230,
+        "name":  "Landesaustellungshalle",
+        "address":  "Knittelfeld, Austrija",
+        "web":  ""
+    },
+    {
+        "id":  231,
+        "name":  "Rijkshemelvaartdienst",
+        "address":  "Oude Haagseweg 58, Amsterdam",
+        "web":  ""
+    },
+    {
+        "id":  232,
+        "name":  "Extreme",
+        "address":  "Affligem, Belgija",
+        "web":  ""
+    },
+    {
+        "id":  233,
+        "name":  "Beach Club Ibiza",
+        "address":  "Machovo jezero, češka",
+        "web":  ""
+    },
+    {
+        "id":  234,
+        "name":  "Karlovy Lazne",
+        "address":  "Novotneho Lavka, Prag, češka",
+        "web":  ""
+    },
+    {
+        "id":  235,
+        "name":  "Rex Club",
+        "address":  "5 BD Poissonniere, Paris",
+        "web":  ""
+    },
+    {
+        "id":  236,
+        "name":  "Cembrankeller",
+        "address":  "Kellergasse 4, Linz, Austrija",
+        "web":  ""
+    },
+    {
+        "id":  238,
+        "name":  "Club Radio 1",
+        "address":  "Ilica 1, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  239,
+        "name":  "Zlatni Rat",
+        "address":  "Bol, Brač",
+        "web":  ""
+    },
+    {
+        "id":  240,
+        "name":  "4 Play",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  241,
+        "name":  "Discoteqe Sfings",
+        "address":  "Fikšinci, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  242,
+        "name":  "Zalog",
+        "address":  "Zadružni dom, Ljubljana",
+        "web":  ""
+    },
+    {
+        "id":  243,
+        "name":  "Mobilus",
+        "address":  "Klaićeva 30, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  244,
+        "name":  "Kam klub",
+        "address":  "Ljutomer, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  245,
+        "name":  "Cult",
+        "address":  "Polmer, Pula",
+        "web":  ""
+    },
+    {
+        "id":  246,
+        "name":  "Robinson",
+        "address":  "Supetar, Cavtat",
+        "web":  ""
+    },
+    {
+        "id":  247,
+        "name":  "uvala Sv. Blaž",
+        "address":  "Cres",
+        "web":  ""
+    },
+    {
+        "id":  248,
+        "name":  "Aqua",
+        "address":  "Petrčane, Zadar",
+        "web":  ""
+    },
+    {
+        "id":  249,
+        "name":  "Plaža Voz",
+        "address":  "otok Krk",
+        "web":  ""
+    },
+    {
+        "id":  250,
+        "name":  "Club 82",
+        "address":  "Stara Novalja, Pag",
+        "web":  ""
+    },
+    {
+        "id":  251,
+        "name":  "Plaža Cesarovo",
+        "address":  "kod Medveje, Lovran",
+        "web":  ""
+    },
+    {
+        "id":  252,
+        "name":  "Second Home",
+        "address":  "Krško (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  253,
+        "name":  "Saloon Club",
+        "address":  "Pag",
+        "web":  ""
+    },
+    {
+        "id":  254,
+        "name":  "brod",
+        "address":  "u luci",
+        "web":  ""
+    },
+    {
+        "id":  255,
+        "name":  "Colosseum",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  256,
+        "name":  "Space",
+        "address":  "Trogir",
+        "web":  ""
+    },
+    {
+        "id":  258,
+        "name":  "Buba",
+        "address":  "Makarska",
+        "web":  ""
+    },
+    {
+        "id":  259,
+        "name":  "Hotel Belvedere",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  260,
+        "name":  "After Club",
+        "address":  "Amneville, Metz (FRA)",
+        "web":  ""
+    },
+    {
+        "id":  261,
+        "name":  "ZCS",
+        "address":  "Varaždin",
+        "web":  ""
+    },
+    {
+        "id":  262,
+        "name":  "Selna bazeni",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  263,
+        "name":  "G. Bazije",
+        "address":  "Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  264,
+        "name":  "Cesargrad",
+        "address":  "Klanjec",
+        "web":  " 40km od Zagreba, manji proplanak u šumi."
+    },
+    {
+        "id":  265,
+        "name":  "Jezera",
+        "address":  "Bedekovčina",
+        "web":  ""
+    },
+    {
+        "id":  266,
+        "name":  "Kostrena Anić",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  267,
+        "name":  "Magnus",
+        "address":  "Senj",
+        "web":  ""
+    },
+    {
+        "id":  268,
+        "name":  "Theater",
+        "address":  "Celje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  269,
+        "name":  "Paradise",
+        "address":  "Vrsar",
+        "web":  ""
+    },
+    {
+        "id":  270,
+        "name":  "Samogor",
+        "address":  "Otok Vis",
+        "web":  ""
+    },
+    {
+        "id":  271,
+        "name":  "Puntacabana",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  272,
+        "name":  "Karlče",
+        "address":  "Krško, SLO",
+        "web":  ""
+    },
+    {
+        "id":  273,
+        "name":  "plaža Girandella",
+        "address":  "Rabac",
+        "web":  ""
+    },
+    {
+        "id":  274,
+        "name":  "Alcatraz",
+        "address":  "Zadar",
+        "web":  ""
+    },
+    {
+        "id":  275,
+        "name":  "Monvi",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  276,
+        "name":  "Monvi",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  277,
+        "name":  "Flash",
+        "address":  "Crikvenica",
+        "web":  ""
+    },
+    {
+        "id":  278,
+        "name":  "Blue",
+        "address":  "Privlaka",
+        "web":  ""
+    },
+    {
+        "id":  279,
+        "name":  "Rt Marlera",
+        "address":  "Ližnjan, Pula",
+        "web":  ""
+    },
+    {
+        "id":  280,
+        "name":  "Royal (hotel)",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  281,
+        "name":  "ZSC Klub",
+        "address":  "Varaždin",
+        "web":  ""
+    },
+    {
+        "id":  282,
+        "name":  "Kalamota",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  283,
+        "name":  "Caffe \"Vila\"",
+        "address":  "?ur?enovac - Našice",
+        "web":  ""
+    },
+    {
+        "id":  284,
+        "name":  "Golubiera beach",
+        "address":  "Rabac",
+        "web":  ""
+    },
+    {
+        "id":  285,
+        "name":  "Mošćenićka Draga",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  286,
+        "name":  "Gradski Bazeni; Križevci",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  288,
+        "name":  "Musica Futura Club / ex Tufna",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  289,
+        "name":  "Shakespeare",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  290,
+        "name":  "Pulse",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  291,
+        "name":  "L etoile",
+        "address":  "Metz (FRA)",
+        "web":  ""
+    },
+    {
+        "id":  292,
+        "name":  "Popaj (ex Forum)",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  293,
+        "name":  "Virage",
+        "address":  "Orahovica",
+        "web":  ""
+    },
+    {
+        "id":  294,
+        "name":  "Trgovački centar Millenium",
+        "address":  "Sesvete",
+        "web":  ""
+    },
+    {
+        "id":  295,
+        "name":  "Stupice (autokamp)",
+        "address":  "Premantura, Istra",
+        "web":  ""
+    },
+    {
+        "id":  296,
+        "name":  "13",
+        "address":  "Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  297,
+        "name":  "Hobbiton",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  298,
+        "name":  "Terra Mystica",
+        "address":  "Bad Bleiberg, Villach (AUT)",
+        "web":  ""
+    },
+    {
+        "id":  299,
+        "name":  "Sloga",
+        "address":  "Sarajevo (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  301,
+        "name":  "Cab",
+        "address":  "Ilica 55, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  302,
+        "name":  "XTC",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  303,
+        "name":  "FER (Fakultet Elektrotehnike i Računarstva)",
+        "address":  "Unska 3, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  304,
+        "name":  "Dvorac Gjalski",
+        "address":  "Zabok",
+        "web":  ""
+    },
+    {
+        "id":  305,
+        "name":  "Grobničko polje (kod aerodroma)",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  306,
+        "name":  "Old City Pub Club",
+        "address":  "Labin",
+        "web":  ""
+    },
+    {
+        "id":  307,
+        "name":  "Mirabel",
+        "address":  "Vrsar, Istra",
+        "web":  ""
+    },
+    {
+        "id":  308,
+        "name":  "Burning Planet",
+        "address":  "Siebensterngasse 27, 1070 Wien",
+        "web":  ""
+    },
+    {
+        "id":  310,
+        "name":  "Susajda klub",
+        "address":  "Cres",
+        "web":  ""
+    },
+    {
+        "id":  311,
+        "name":  "The Underground",
+        "address":  "Miramarska 20, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  312,
+        "name":  "club Casanova x",
+        "address":  "Trogir",
+        "web":  ""
+    },
+    {
+        "id":  313,
+        "name":  "TC",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  314,
+        "name":  "Concordia",
+        "address":  "Kranjčevićeva 16, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  315,
+        "name":  "Veslo klub",
+        "address":  "Šibenik",
+        "web":  ""
+    },
+    {
+        "id":  316,
+        "name":  "Blues",
+        "address":  "Orahovica",
+        "web":  ""
+    },
+    {
+        "id":  317,
+        "name":  "Admiral",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  318,
+        "name":  "Belvedere",
+        "address":  "Izola (Slovenija)",
+        "web":  ""
+    },
+    {
+        "id":  319,
+        "name":  "Art Caffe",
+        "address":  "Vrbovec",
+        "web":  ""
+    },
+    {
+        "id":  320,
+        "name":  "Soho",
+        "address":  "Duga Resa, Ničićeva 12",
+        "web":  ""
+    },
+    {
+        "id":  321,
+        "name":  "Safehouse",
+        "address":  "cyber klub, Križevci",
+        "web":  ""
+    },
+    {
+        "id":  322,
+        "name":  "Dance",
+        "address":  "Našice",
+        "web":  ""
+    },
+    {
+        "id":  323,
+        "name":  "Vidikovac",
+        "address":  "Plomin",
+        "web":  ""
+    },
+    {
+        "id":  324,
+        "name":  "Millenium",
+        "address":  "night bar, Rab",
+        "web":  ""
+    },
+    {
+        "id":  325,
+        "name":  "K.Rojc",
+        "address":  "basement, Pula",
+        "web":  ""
+    },
+    {
+        "id":  326,
+        "name":  "Judo, caffe bar",
+        "address":  "Samobor (u sklopu dvorane B.Toni)",
+        "web":  ""
+    },
+    {
+        "id":  327,
+        "name":  "Target",
+        "address":  "Prnjavor (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  328,
+        "name":  "Jungle",
+        "address":  "otok Krk",
+        "web":  ""
+    },
+    {
+        "id":  329,
+        "name":  "Bad Boy",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  330,
+        "name":  "Matica",
+        "address":  "Koper (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  331,
+        "name":  "Cezar",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  332,
+        "name":  "Grand",
+        "address":  "otok Rab",
+        "web":  ""
+    },
+    {
+        "id":  333,
+        "name":  "Central (SLO)",
+        "address":  "Ljubljana",
+        "web":  ""
+    },
+    {
+        "id":  334,
+        "name":  "Coctail",
+        "address":  "Ogulin",
+        "web":  ""
+    },
+    {
+        "id":  335,
+        "name":  "Nec",
+        "address":  "Požega",
+        "web":  ""
+    },
+    {
+        "id":  336,
+        "name":  "Faraggo (caffe bar)",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  337,
+        "name":  "Komet",
+        "address":  "Metković",
+        "web":  ""
+    },
+    {
+        "id":  338,
+        "name":  "Enigma",
+        "address":  "Gornji Grad, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  339,
+        "name":  "Lite",
+        "address":  "Novigrad",
+        "web":  ""
+    },
+    {
+        "id":  340,
+        "name":  "Life",
+        "address":  "motel Universitas",
+        "web":  ""
+    },
+    {
+        "id":  341,
+        "name":  "Big Ben",
+        "address":  "Bogovićeva, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  342,
+        "name":  "Central",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  343,
+        "name":  "Tivoli",
+        "address":  "Portorož",
+        "web":  ""
+    },
+    {
+        "id":  344,
+        "name":  "Gala Hala",
+        "address":  "Metelkova, Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  345,
+        "name":  "Tequila Club",
+        "address":  "Tomlin (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  346,
+        "name":  "Spunk",
+        "address":  "NSB, Hrvatske Bratske zajednice bb",
+        "web":  ""
+    },
+    {
+        "id":  348,
+        "name":  "Japa (bar)",
+        "address":  "Čakovec",
+        "web":  ""
+    },
+    {
+        "id":  349,
+        "name":  "Boomerang",
+        "address":  "Banja Luka",
+        "web":  ""
+    },
+    {
+        "id":  350,
+        "name":  "Melody",
+        "address":  "Krk",
+        "web":  ""
+    },
+    {
+        "id":  351,
+        "name":  "Podzemlje Monte Paradiso",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  352,
+        "name":  "Kulturno središte mladih",
+        "address":  "bivši \"Dom mladeži\"",
+        "web":  ""
+    },
+    {
+        "id":  353,
+        "name":  "Dom Mladih",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  354,
+        "name":  "Korzo",
+        "address":  "centar grada, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  355,
+        "name":  "Blackout",
+        "address":  "Izola (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  356,
+        "name":  "Peristil",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  357,
+        "name":  "Exodus",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  358,
+        "name":  "Posh Club",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  359,
+        "name":  "SKUC Braća Radić",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  361,
+        "name":  "Mr. Jack",
+        "address":  "Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  362,
+        "name":  "Best (Pž)",
+        "address":  "Požega",
+        "web":  ""
+    },
+    {
+        "id":  363,
+        "name":  "Gradna (caffe bar)",
+        "address":  "Samobor",
+        "web":  ""
+    },
+    {
+        "id":  364,
+        "name":  "Thalia (caffe bar)",
+        "address":  "Teslina 7, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  365,
+        "name":  "Ferrari (Caffe Club)",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  366,
+        "name":  "Kalahari",
+        "address":  "Zaprešić",
+        "web":  ""
+    },
+    {
+        "id":  367,
+        "name":  "Mirakul",
+        "address":  "Vodice",
+        "web":  ""
+    },
+    {
+        "id":  368,
+        "name":  "Arion",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  369,
+        "name":  "Slavija",
+        "address":  "Osijek",
+        "web":  ""
+    },
+    {
+        "id":  370,
+        "name":  "plaža Veliki Žali",
+        "address":  "Brsečine, Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  371,
+        "name":  "TNT",
+        "address":  "Labin",
+        "web":  ""
+    },
+    {
+        "id":  372,
+        "name":  "Cristo (tvrđava)",
+        "address":  "Stinjan, Pula",
+        "web":  ""
+    },
+    {
+        "id":  373,
+        "name":  "Iguana (caffe bar)",
+        "address":  "Tkalčićeva ulica, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  374,
+        "name":  "Blue Night (caffe bar)",
+        "address":  "Petrine 34, Jarun, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  375,
+        "name":  "Baza",
+        "address":  "ex. Zeus, Labin",
+        "web":  ""
+    },
+    {
+        "id":  376,
+        "name":  "Exit (caffe bar)",
+        "address":  "Metković",
+        "web":  ""
+    },
+    {
+        "id":  377,
+        "name":  "Japa i Barfly",
+        "address":  "Čakovec",
+        "web":  ""
+    },
+    {
+        "id":  378,
+        "name":  "Park Matice Hrvatske",
+        "address":  "Krapina",
+        "web":  ""
+    },
+    {
+        "id":  379,
+        "name":  "Pegaz (YU)",
+        "address":  "Inđija",
+        "web":  ""
+    },
+    {
+        "id":  380,
+        "name":  "Lungo Mare",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  381,
+        "name":  "San Polo",
+        "address":  "Bale",
+        "web":  ""
+    },
+    {
+        "id":  382,
+        "name":  "Veliki Šator Osječke Pivovare",
+        "address":  "kod osječkih katakombi",
+        "web":  ""
+    },
+    {
+        "id":  383,
+        "name":  "Pappilon",
+        "address":  "Ploče",
+        "web":  ""
+    },
+    {
+        "id":  384,
+        "name":  "Oliva (caffe bar)",
+        "address":  "tržni centar Jarun",
+        "web":  ""
+    },
+    {
+        "id":  385,
+        "name":  "Divača (aerodrom)",
+        "address":  "kraj autoceste",
+        "web":  ""
+    },
+    {
+        "id":  386,
+        "name":  "St. Andrea",
+        "address":  "Rabac",
+        "web":  ""
+    },
+    {
+        "id":  387,
+        "name":  "Kosi Toranj (caffe bar)",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  388,
+        "name":  "Supetar",
+        "address":  "otok",
+        "web":  ""
+    },
+    {
+        "id":  389,
+        "name":  "Gap",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  390,
+        "name":  "Dancing",
+        "address":  "Vrsar",
+        "web":  ""
+    },
+    {
+        "id":  391,
+        "name":  "Paf (caffe bar)",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  392,
+        "name":  "Studio 036",
+        "address":  "Čapljina",
+        "web":  ""
+    },
+    {
+        "id":  393,
+        "name":  "Glamour (caffe bar)",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  394,
+        "name":  "Skala",
+        "address":  "Preluk, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  396,
+        "name":  "Jukebox",
+        "address":  "Metlika",
+        "web":  ""
+    },
+    {
+        "id":  397,
+        "name":  "Bellevue",
+        "address":  "Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  398,
+        "name":  "plaža Nedomišalj",
+        "address":  "Cres",
+        "web":  ""
+    },
+    {
+        "id":  399,
+        "name":  "Joy, caffe bar",
+        "address":  "Viskovo, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  400,
+        "name":  "Hotel Učka",
+        "address":  "Učka",
+        "web":  ""
+    },
+    {
+        "id":  401,
+        "name":  "Hotel Učka",
+        "address":  "Učka",
+        "web":  ""
+    },
+    {
+        "id":  402,
+        "name":  "Hala srednjoškolskog centra",
+        "address":  "Jug Bogdana bb, Doboj(BIH)",
+        "web":  "http://www.summersession.co.ba"
+    },
+    {
+        "id":  403,
+        "name":  "Insomnia",
+        "address":  "Rijeka, Preluk",
+        "web":  ""
+    },
+    {
+        "id":  404,
+        "name":  "Ranč uz rijeku, Čakovec",
+        "address":  "Čakovec",
+        "web":  ""
+    },
+    {
+        "id":  405,
+        "name":  "Blizu zamka Turjak",
+        "address":  "Turjak (Slo)",
+        "web":  ""
+    },
+    {
+        "id":  406,
+        "name":  "Brod: Biser Jadrana, Split",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  407,
+        "name":  "Sportski Centar",
+        "address":  "Kutina",
+        "web":  ""
+    },
+    {
+        "id":  408,
+        "name":  "Cik - Kuenstlerhaus",
+        "address":  "Klagenfurt (AUT)",
+        "web":  ""
+    },
+    {
+        "id":  409,
+        "name":  "otok Kotez",
+        "address":  "Nacionalni Park Brijuni",
+        "web":  ""
+    },
+    {
+        "id":  410,
+        "name":  "dvorac Veliki Tabor",
+        "address":  "Desinić, Hrvatsko Zagorje",
+        "web":  ""
+    },
+    {
+        "id":  411,
+        "name":  "Dunat",
+        "address":  "Krk",
+        "web":  ""
+    },
+    {
+        "id":  412,
+        "name":  "Digeridoo",
+        "address":  "Pakrac",
+        "web":  ""
+    },
+    {
+        "id":  413,
+        "name":  "Adriatic",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  414,
+        "name":  "Barbariga",
+        "address":  "20 km od Pule",
+        "web":  ""
+    },
+    {
+        "id":  415,
+        "name":  "Športni Center Žalec",
+        "address":  "Žalec, Celje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  416,
+        "name":  "Bazen",
+        "address":  "Kutina",
+        "web":  ""
+    },
+    {
+        "id":  417,
+        "name":  "Gradska plaža (Rezalište) Brodarica",
+        "address":  "Šibenik",
+        "web":  ""
+    },
+    {
+        "id":  418,
+        "name":  "Firehouse BJ",
+        "address":  "Vatrogasni Dom, Bjelovar",
+        "web":  ""
+    },
+    {
+        "id":  419,
+        "name":  "Izletište Kunjevci",
+        "address":  "Bazjaš, Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  420,
+        "name":  "Nautilus",
+        "address":  "Makarska",
+        "web":  ""
+    },
+    {
+        "id":  421,
+        "name":  "Koparska plaza",
+        "address":  "Kopalisko nabrezje 1 (pored marine u Kopru, SLO)",
+        "web":  ""
+    },
+    {
+        "id":  422,
+        "name":  "LD",
+        "address":  "Donji Stupnik",
+        "web":  ""
+    },
+    {
+        "id":  423,
+        "name":  "Cali Surfin",
+        "address":  "Krk",
+        "web":  ""
+    },
+    {
+        "id":  424,
+        "name":  "Henessy",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  425,
+        "name":  "2nd HOME",
+        "address":  "Motel Pacific Krško(SLO)",
+        "web":  ""
+    },
+    {
+        "id":  426,
+        "name":  "Kostrenka Open Air",
+        "address":  "Kostrena",
+        "web":  ""
+    },
+    {
+        "id":  427,
+        "name":  "Night Club Columbia",
+        "address":  "Kruge 48, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  428,
+        "name":  "Lounge bar",
+        "address":  "Rabac",
+        "web":  ""
+    },
+    {
+        "id":  429,
+        "name":  "Uvala Čigrađa",
+        "address":  "Murter",
+        "web":  ""
+    },
+    {
+        "id":  430,
+        "name":  "Za-Za (Katoro)",
+        "address":  "Umag",
+        "web":  ""
+    },
+    {
+        "id":  431,
+        "name":  "Night Club Escape",
+        "address":  "Ulica Špansko 60, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  432,
+        "name":  "Belveder",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  433,
+        "name":  "Open Air",
+        "address":  "",
+        "web":  ""
+    },
+    {
+        "id":  434,
+        "name":  "Paradiso",
+        "address":  "Vrsar",
+        "web":  ""
+    },
+    {
+        "id":  435,
+        "name":  "Petrovaradinska tvrđava",
+        "address":  "Novi Sad",
+        "web":  ""
+    },
+    {
+        "id":  436,
+        "name":  "Beach klub \"Vodice\"",
+        "address":  "Gradac",
+        "web":  ""
+    },
+    {
+        "id":  437,
+        "name":  "Club Hacienda",
+        "address":  "Vodice",
+        "web":  ""
+    },
+    {
+        "id":  438,
+        "name":  "Dvorana Kozare",
+        "address":  "Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  439,
+        "name":  "Club Barbarella",
+        "address":  "Mlini",
+        "web":  ""
+    },
+    {
+        "id":  440,
+        "name":  "Divinae Follie",
+        "address":  "Dubrovnik",
+        "web":  ""
+    },
+    {
+        "id":  441,
+        "name":  "Dilj",
+        "address":  "Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  442,
+        "name":  "The Club",
+        "address":  "Marija Bistrica",
+        "web":  ""
+    },
+    {
+        "id":  443,
+        "name":  "Girandella Beach",
+        "address":  "Rabac, Istra",
+        "web":  ""
+    },
+    {
+        "id":  444,
+        "name":  "Motovun",
+        "address":  "Motovun",
+        "web":  ""
+    },
+    {
+        "id":  445,
+        "name":  "Cubano",
+        "address":  "Makarska",
+        "web":  ""
+    },
+    {
+        "id":  446,
+        "name":  "Izletište Sopot",
+        "address":  "Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  447,
+        "name":  "Tvornica TEF",
+        "address":  "Šibenik",
+        "web":  ""
+    },
+    {
+        "id":  448,
+        "name":  "DELI/am",
+        "address":  "Naschmarkt, Vienna  (AUT)",
+        "web":  ""
+    },
+    {
+        "id":  449,
+        "name":  "Plaža Veli Bok",
+        "address":  "Cres",
+        "web":  ""
+    },
+    {
+        "id":  450,
+        "name":  "Willys Bar",
+        "address":  "Ročinj (pri Soči, SLO)",
+        "web":  ""
+    },
+    {
+        "id":  451,
+        "name":  "Plaža Ušće Neretve",
+        "address":  "Opuzen",
+        "web":  ""
+    },
+    {
+        "id":  452,
+        "name":  "Cafe Club Bonaparte",
+        "address":  "Vinkovci",
+        "web":  ""
+    },
+    {
+        "id":  453,
+        "name":  "Energy (Mali Lošinj)",
+        "address":  "Mali Lošinj",
+        "web":  ""
+    },
+    {
+        "id":  454,
+        "name":  "Hajógyári Island",
+        "address":  "Budimpešta",
+        "web":  "http://www.diaksziget.com"
+    },
+    {
+        "id":  455,
+        "name":  "Bazen",
+        "address":  "Beli Manastir",
+        "web":  ""
+    },
+    {
+        "id":  456,
+        "name":  "bazeni  Beli Manastir",
+        "address":  "kraj Osijeka",
+        "web":  ""
+    },
+    {
+        "id":  457,
+        "name":  "Aerodrom Cerklje",
+        "address":  "Brežice (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  458,
+        "name":  "Luna",
+        "address":  "Rabac",
+        "web":  ""
+    },
+    {
+        "id":  459,
+        "name":  "Feniks",
+        "address":  "Crikvenica",
+        "web":  ""
+    },
+    {
+        "id":  460,
+        "name":  "Oko",
+        "address":  "Spišić Bukovica, Virovitica",
+        "web":  ""
+    },
+    {
+        "id":  461,
+        "name":  "Kalemegdanska Tvrdjava",
+        "address":  "Beograd (YU)",
+        "web":  ""
+    },
+    {
+        "id":  462,
+        "name":  "Hacienda",
+        "address":  "Brač",
+        "web":  ""
+    },
+    {
+        "id":  463,
+        "name":  "Brod \"Biser Jadrana\"",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  464,
+        "name":  "Mul Opatija",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  465,
+        "name":  "Emonska Klet",
+        "address":  "(Slovenija)",
+        "web":  ""
+    },
+    {
+        "id":  466,
+        "name":  "Brod \"Biser Jadrana\" (Pu)",
+        "address":  "Pula",
+        "web":  ""
+    },
+    {
+        "id":  467,
+        "name":  "Exit",
+        "address":  "Vodice",
+        "web":  ""
+    },
+    {
+        "id":  469,
+        "name":  "Discovery",
+        "address":  "Split",
+        "web":  ""
+    },
+    {
+        "id":  470,
+        "name":  "F1",
+        "address":  "Trogir",
+        "web":  ""
+    },
+    {
+        "id":  471,
+        "name":  "Xcalibur club",
+        "address":  "Cres",
+        "web":  ""
+    },
+    {
+        "id":  472,
+        "name":  "Brod \"Portorož\"",
+        "address":  "Portorož, Slovenija",
+        "web":  ""
+    },
+    {
+        "id":  473,
+        "name":  "Klub mladih BUM",
+        "address":  "Buzet",
+        "web":  ""
+    },
+    {
+        "id":  474,
+        "name":  "Club 2nd Home",
+        "address":  "Motel Pacific, Krško",
+        "web":  ""
+    },
+    {
+        "id":  475,
+        "name":  "Reloop",
+        "address":  "Čapljina",
+        "web":  ""
+    },
+    {
+        "id":  476,
+        "name":  "King club",
+        "address":  "Labin",
+        "web":  ""
+    },
+    {
+        "id":  477,
+        "name":  "Insomnia (ex Fun Academy)",
+        "address":  "Rijeka, Preluk",
+        "web":  ""
+    },
+    {
+        "id":  478,
+        "name":  "Dvorana BKC",
+        "address":  "Sarajevo (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  479,
+        "name":  "Robna kuca Sarajka",
+        "address":  "Sarajevo (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  480,
+        "name":  "Hotel Maršal",
+        "address":  "Sarajevo (BiH)",
+        "web":  ""
+    },
+    {
+        "id":  481,
+        "name":  "Club Ćuvita",
+        "address":  "Otok Šolta",
+        "web":  ""
+    },
+    {
+        "id":  482,
+        "name":  "Stella (Šb)",
+        "address":  "Široki Brijeg (Bih)",
+        "web":  ""
+    },
+    {
+        "id":  483,
+        "name":  "Club 81",
+        "address":  "Sesvete",
+        "web":  ""
+    },
+    {
+        "id":  484,
+        "name":  "Columbia",
+        "address":  "Kruge 48",
+        "web":  ""
+    },
+    {
+        "id":  485,
+        "name":  "Boomerang",
+        "address":  "Banjaluka (Bih)",
+        "web":  ""
+    },
+    {
+        "id":  486,
+        "name":  "Gazometer",
+        "address":  "Bank Austria Halle, Guglgasse 11 (U3), Wien(Aut)",
+        "web":  ""
+    },
+    {
+        "id":  487,
+        "name":  "Calahari",
+        "address":  "Zaprešić",
+        "web":  ""
+    },
+    {
+        "id":  488,
+        "name":  "Dvorana CDA",
+        "address":  "Sarajevo",
+        "web":  ""
+    },
+    {
+        "id":  489,
+        "name":  "Jupiter",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  490,
+        "name":  "Klub Ribnjak",
+        "address":  "Park Ribnjak 1",
+        "web":  ""
+    },
+    {
+        "id":  491,
+        "name":  "Club X",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  492,
+        "name":  "Brodska Tvrđava",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  493,
+        "name":  "Kuglana",
+        "address":  "Zabok",
+        "web":  ""
+    },
+    {
+        "id":  494,
+        "name":  "Frizerski salon Teuta",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  495,
+        "name":  "Art klub Gal",
+        "address":  "Korzo 28, Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  496,
+        "name":  "MM Centar (SC)",
+        "address":  "Savska 25, Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  497,
+        "name":  "Aquapolis",
+        "address":  "Bizovac, Osijek",
+        "web":  ""
+    },
+    {
+        "id":  498,
+        "name":  "Millennium",
+        "address":  "Busovača (Bih)",
+        "web":  ""
+    },
+    {
+        "id":  499,
+        "name":  "Kotlic",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  500,
+        "name":  "BOF Center",
+        "address":  "BTC City, Ljubljana (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  501,
+        "name":  "Plastic",
+        "address":  "Opatija",
+        "web":  ""
+    },
+    {
+        "id":  502,
+        "name":  "Kino Sala, Dom Mladih Centar",
+        "address":  "Vitez (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  503,
+        "name":  "Gustaf",
+        "address":  "Maribor (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  504,
+        "name":  "China",
+        "address":  "Garešnica",
+        "web":  ""
+    },
+    {
+        "id":  505,
+        "name":  "Klub Gros",
+        "address":  "Grosuplje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  506,
+        "name":  "Planinarski dom, Vugrovec",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  507,
+        "name":  "Restaurant Zadar",
+        "address":  "Hotel Zagreb, Zadar",
+        "web":  ""
+    },
+    {
+        "id":  508,
+        "name":  "Titanic",
+        "address":  "Vrbovec",
+        "web":  ""
+    },
+    {
+        "id":  509,
+        "name":  "G. P. Bavaria",
+        "address":  "Čitluk (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  510,
+        "name":  "habana",
+        "address":  "opatija",
+        "web":  ""
+    },
+    {
+        "id":  511,
+        "name":  "Športna dvorana Bled",
+        "address":  "Bled (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  512,
+        "name":  "Športna dvorana Bled",
+        "address":  "Bled (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  513,
+        "name":  "Športna dvorana Bled",
+        "address":  "Bled (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  514,
+        "name":  "Klub Sova",
+        "address":  "Hotel Panonija, Sisak",
+        "web":  ""
+    },
+    {
+        "id":  515,
+        "name":  "Kulturni centar Kaptol centra",
+        "address":  "Kaptol centar",
+        "web":  ""
+    },
+    {
+        "id":  516,
+        "name":  "club Carmen",
+        "address":  "Čitluk",
+        "web":  ""
+    },
+    {
+        "id":  517,
+        "name":  "club Carmen",
+        "address":  "Čitluk",
+        "web":  ""
+    },
+    {
+        "id":  518,
+        "name":  "Havana",
+        "address":  "Kutina",
+        "web":  ""
+    },
+    {
+        "id":  519,
+        "name":  "Caffeteria Slap",
+        "address":  "Karlovac",
+        "web":  ""
+    },
+    {
+        "id":  520,
+        "name":  "club Svinjak",
+        "address":  "Lesce (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  521,
+        "name":  "club Rosa",
+        "address":  "Kokrica pri Kranju (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  522,
+        "name":  "Dvorana L, Celjski Sajam",
+        "address":  "Celje (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  523,
+        "name":  "Klub Access",
+        "address":  "Sarajevo (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  524,
+        "name":  "Shanni Club",
+        "address":  "S.Giovanni, Udine (ITA)",
+        "web":  ""
+    },
+    {
+        "id":  525,
+        "name":  "club \"Heineken in\"",
+        "address":  "Mostar",
+        "web":  ""
+    },
+    {
+        "id":  526,
+        "name":  "River Pub",
+        "address":  "Rijeka",
+        "web":  ""
+    },
+    {
+        "id":  527,
+        "name":  "Dvorana Obilićevo",
+        "address":  "Banja Luka (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  528,
+        "name":  "Club Escape",
+        "address":  "Postire, Brač",
+        "web":  ""
+    },
+    {
+        "id":  529,
+        "name":  "kino urania",
+        "address":  "kvaternikov trg / zgb",
+        "web":  ""
+    },
+    {
+        "id":  530,
+        "name":  "Music Hall",
+        "address":  "BanjaLuka (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  531,
+        "name":  "SKC",
+        "address":  "Kralja Milana 48, Beograd (YU)",
+        "web":  ""
+    },
+    {
+        "id":  532,
+        "name":  "Blue Velvet Club",
+        "address":  "Rovinj",
+        "web":  ""
+    },
+    {
+        "id":  533,
+        "name":  "Syber",
+        "address":  "Duga Resa",
+        "web":  ""
+    },
+    {
+        "id":  534,
+        "name":  "Quo Vadis",
+        "address":  "Vukovar",
+        "web":  ""
+    },
+    {
+        "id":  535,
+        "name":  "Picadilly",
+        "address":  "Mostar (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  536,
+        "name":  "Atlantic",
+        "address":  "Doboj, BiH",
+        "web":  ""
+    },
+    {
+        "id":  537,
+        "name":  "Konak",
+        "address":  "Travnik, BiH",
+        "web":  ""
+    },
+    {
+        "id":  538,
+        "name":  "Caffe Bar Voodo",
+        "address":  "Marulićeva 1, Pula",
+        "web":  ""
+    },
+    {
+        "id":  539,
+        "name":  "Toćkica",
+        "address":  "Mesnićka",
+        "web":  ""
+    },
+    {
+        "id":  540,
+        "name":  "Klub Cair",
+        "address":  "Niš (YU)",
+        "web":  ""
+    },
+    {
+        "id":  541,
+        "name":  "City Music Hall",
+        "address":  "Sarajevo (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  542,
+        "name":  "Infiniti-Bastion",
+        "address":  "Slavonski Brod",
+        "web":  ""
+    },
+    {
+        "id":  543,
+        "name":  "Club Moulin Rouge",
+        "address":  "Jesenice na dolenjskem (SLO)",
+        "web":  ""
+    },
+    {
+        "id":  544,
+        "name":  "Club Konak",
+        "address":  "Travnik (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  545,
+        "name":  "Club Atlantic",
+        "address":  "Doboj (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  546,
+        "name":  " Club Mlin",
+        "address":  "Tuzla (BIH)",
+        "web":  ""
+    },
+    {
+        "id":  547,
+        "name":  "Night Club LavLant",
+        "address":  "Šišan, Pula",
+        "web":  ""
+    },
+    {
+        "id":  548,
+        "name":  "Lounge Bar Tantra",
+        "address":  "Zagreb",
+        "web":  ""
+    },
+    {
+        "id":  549,
+        "name":  "Klub Mese\u0026#268;ina",
+        "address":  "(SLO)",
+        "web":  ""
+    },
+    {
+        "id":  550,
+        "name":  "Club Next",
+        "address":  "Ližnjan via Marlera, Pula",
+        "web":  ""
+    },
+    {
+        "id":  551,
+        "name":  "Gradski Bazeni",
+        "address":  "Čakovec",
+        "web":  ""
+    },
+    {
+        "id":  552,
+        "name":  "Dino Due",
+        "address":  "Banova Jaruga",
+        "web":  ""
+    }
+]

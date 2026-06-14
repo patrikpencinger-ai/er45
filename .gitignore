@@ -7,9 +7,11 @@ Desktop.ini
 # Local Claude session state (keep serve.ps1, ignore local settings)
 .claude/settings.local.json
 
-# Do NOT commit the original-site archive backup if it ever lands here.
+# Do NOT commit the original-site backup if it ever lands here.
 # (It lives at C:\Users\patri\OneDrive\Backup\ER45 — 1.6 GB, read-only source.)
-archive/
+# NB: `archive/` is NOT ignored — that's the archive.er45.com subdomain site
+# (reconstructed JSON + flyer thumbnails). Raw DB/dump/zip files stay ignored:
 *.zip
 *.mdb
 *.dump
+*.dump.gz
