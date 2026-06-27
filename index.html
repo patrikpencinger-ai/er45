@@ -9,9 +9,11 @@
 <style>
   :root{ --green:#7bf06a; --cyan:#36d6ff; --font:"Courier New", ui-monospace, monospace; }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:#1b2730;color:#e9eefb;font-family:var(--font);overflow:hidden}
-  /* page background blends with the artwork's dark edges */
-  body{background:radial-gradient(120% 120% at 50% 42%, #2b3b45 0%, #1b2730 60%, #121b22 100%)}
+  html,body{margin:0;height:100%;background:#233044;color:#e9eefb;font-family:var(--font);overflow:hidden}
+  /* page bg matches the artwork's top edge (#233044) and bottom edge (#364751),
+     so the letterbox above/below the image blends in and the image seems endless.
+     The 47-53% blend band sits behind the centred image, so it's never visible. */
+  body{background:linear-gradient(to bottom, #233044 0%, #233044 47%, #364751 53%, #364751 100%)}
 
   .stage{position:fixed;inset:0;display:grid;place-items:center}
   /* the scene keeps the artwork's aspect ratio and fits the viewport */
@@ -24,18 +26,9 @@
     outline:2px solid transparent;transition:outline-color .15s, box-shadow .15s, background .15s}
   .hot:hover,.hot:focus-visible{outline-color:rgba(123,240,106,.65);
     background:rgba(123,240,106,.08);box-shadow:0 0 22px rgba(123,240,106,.30)}
-  .hot.respects{left:35%;top:81%;width:30%;height:10%}
+  /* the archive link sits right over the drawn "Pay Respects" button */
+  .hot.respects{left:38%;top:79%;width:24%;height:12.5%}
   .hot.subs{left:22%;top:91.5%;width:56%;height:7%}
-
-  /* always-visible, unambiguous archive link */
-  .enter{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));
-    z-index:5;display:inline-flex;align-items:center;gap:.5em;text-decoration:none;color:var(--cyan);
-    border:1px solid rgba(54,214,255,.4);background:rgba(8,14,22,.6);backdrop-filter:blur(4px);
-    padding:.55em 1em;border-radius:999px;font-size:clamp(11px,2.4vw,13px);letter-spacing:.1em;
-    box-shadow:0 0 0 1px rgba(0,0,0,.3);transition:.2s}
-  .enter:hover{color:#bfefff;border-color:var(--cyan);background:rgba(54,214,255,.14);
-    box-shadow:0 0 18px rgba(54,214,255,.4);transform:translateY(-1px)}
-  .enter b{color:var(--green);font-weight:bold}
 
   /* screen-reader / keyboard fallback */
   .sr{position:absolute;left:-9999px}
@@ -51,10 +44,6 @@
       <a class="hot subs" data-archive href="/archive/" aria-label="The infrastructure continues in the subdomains — open the archive" title="The infrastructure continues in the subdomains"></a>
     </div>
   </main>
-
-  <a class="enter" data-archive href="/archive/" title="The full party chronology, articles & flyers — 1991–2003">
-    <b>archiv.er45.com</b> <span aria-hidden="true">↗</span>
-  </a>
 
   <a class="sr" data-archive href="/archive/">Enter the ER45 archive</a>
 
