@@ -115,7 +115,7 @@
     </div>
     <div class="subline">THE INFRASTRUCTURE CONTINUES IN THE SUBDOMAINS</div>
     <div class="subs">
-      <a id="archiveLink" href="/archive/" title="The full party chronology, articles & flyers — 1991–2003">archive.er45.com</a>
+      <a id="archiveLink" href="/archive/" title="The full party chronology, articles & flyers — 1991–2003">archiv.er45.com</a>
     </div>
   </div>
 
@@ -657,13 +657,13 @@
 })();
 
 /* Subdomain routing: on the real er45.com, point the archive link at the
-   archive.er45.com subdomain; locally (file://, localhost, 127.0.0.1, LAN)
+   archiv.er45.com subdomain; locally (file://, localhost, 127.0.0.1, LAN)
    keep the /archive/ path so the single static server still works. */
 (() => {
   const a = document.getElementById('archiveLink'); if(!a) return;
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
-  if(!isLocal) a.href = location.protocol + '//archive.' + h.replace(/^www\./,'') + '/';
+  if(!isLocal) a.href = location.protocol + '//archiv.' + h.replace(/^www\./,'') + '/';
 })();
 </script>
 </body>

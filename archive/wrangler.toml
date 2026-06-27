@@ -1,9 +1,0 @@
-name = "er45-archive"
-compatibility_date = "2026-06-01"
-
-# Static-asset-only Worker for archive.er45.com.
-# Served from this folder: index.html + data/*.json + flyers.json + assets/.
-# In Cloudflare, set this project's root directory to "archive" so this config
-# is used and index.html here is served at the subdomain root.
-[assets]
-directory = "./"

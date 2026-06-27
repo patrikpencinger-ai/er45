@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>archive.er45.com — the chronology</title>
-<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <meta name="description" content="The ER45 archive — the full party chronology (1991–2003), article index and event flyers of the Croatian electronic-music portal ER45.com." />
 <style>
   :root{
@@ -238,7 +238,7 @@ const arrify = v => Array.isArray(v) ? v : (v==null||v==='' ? [] : [v]);
 // locally ("/" served by the single static server) the memorial is at root.
 (() => {
   const a=document.getElementById('backLink'); if(!a) return;
-  const h=location.hostname, m=h.match(/^archive\.(.+)$/i);
+  const h=location.hostname, m=h.match(/^archiv\.(.+)$/i);
   if(m) a.href = location.protocol + '//' + m[1] + '/';
 })();
 

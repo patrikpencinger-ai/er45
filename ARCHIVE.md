@@ -84,7 +84,7 @@ public revival and out of git.
   historically accurate — V3 genuinely split sections across subdomains.
 - Rich revival material already exists: the **party chronology** (`chrono.sql`),
   the **article archive** (`clanci.sql` + `Članci/`), and thousands of **party
-  photos** — any of these could become a real subdomain (e.g. `archive.er45.com`).
+  photos** — any of these could become a real subdomain (e.g. `archiv.er45.com`).
 - The **original 2003 site** is preserved under `_backup\22012003_www.er45.com`
   and `_backup\wwwroot_er45` — static parts may be viewable; ASP pages would need
   IIS (or a quick port) to run again.

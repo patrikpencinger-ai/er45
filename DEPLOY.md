@@ -1,68 +1,56 @@
-# Going live on Cloudflare — er45.com (memorial) + archive.er45.com (archive)
+# Going live on Cloudflare — er45.com (memorial) + archiv.er45.com (archive)
 
-Both sites are **static** (HTML + JSON + images), deployed the same way as the
-other projects: a Cloudflare **static-asset Worker** per site, built from the
-GitHub repo. The shape:
+Both sites are **static** (HTML + JSON + images) and are served by **one**
+Cloudflare static-asset Worker (`er45`), routed by hostname in `worker.js`:
 
-| Hostname | Project | Project root | wrangler.toml | Serves |
-|----------|---------|--------------|---------------|--------|
-| `er45.com` + `www.er45.com` | **er45** | `/` (repo root) | `wrangler.toml` | the memorial (`index.html`) |
-| `archive.er45.com` | **er45-archive** | `archive` | `archive/wrangler.toml` | the archive (`archive/index.html`) |
+| Hostname | Serves |
+|----------|--------|
+| `er45.com` + `www.er45.com` | the memorial (`index.html`) |
+| `archiv.er45.com` | the archive — `worker.js` rewrites it onto the `/archive/` subtree |
 
-The cross-links auto-switch in production (memorial → `archive.er45.com`, archive
-back-link → `er45.com`); on localhost they stay path-based. Nothing in the code
-changes to deploy.
+`run_worker_first = true` (in `wrangler.toml`) lets the script run before static
+assets are matched, so it can map `archiv.er45.com/<path>` → `/archive/<path>`.
+The cross-links also auto-switch in production; on localhost they stay path-based.
 
-The repo is pushed to **github.com/patrikpencinger-ai/er45** (`main`).
-
----
-
-## One-time setup in the Cloudflare dashboard
-
-### Project 1 — the memorial (er45.com + www)
-1. **Workers & Pages → Create → Workers → Import a repository →** pick
-   `patrikpencinger-ai/er45`.
-2. Leave the **root directory** as `/`. It picks up `wrangler.toml`
-   (`name = "er45"`, `[assets] directory = "./"`). No build command.
-3. Deploy. Then **Settings → Domains & Routes → Add → Custom domain** and add
-   **both** `er45.com` and `www.er45.com`. Cloudflare adds the DNS records and
-   the TLS cert automatically (er45.com is already on Cloudflare).
-
-### Project 2 — the archive (archive.er45.com)
-1. **Create → Workers → Import a repository →** pick the **same** repo
-   `patrikpencinger-ai/er45` again.
-2. Set the **root directory** to **`archive`** so it uses `archive/wrangler.toml`
-   (`name = "er45-archive"`). No build command.
-3. Deploy, then add the custom domain **`archive.er45.com`**.
-
-That's it — pushing to `main` redeploys both projects.
-
-> If the Cloudflare GitHub app uses "only selected repos", grant it access to the
-> new `er45` repo first (GitHub → Settings → Applications → Cloudflare → repo access).
+Repo: **github.com/patrikpencinger-ai/er45** (`main`).
 
 ---
 
-## CLI alternative (wrangler)
-If you'd rather deploy from the terminal instead of the dashboard:
+## Setup (mostly done)
 
-```powershell
-npm i -g wrangler        # if not installed
-wrangler login           # opens browser, authorises your Cloudflare account
-wrangler deploy                       # from repo root  -> project "er45"
-wrangler deploy -c archive/wrangler.toml   # -> project "er45-archive"
-```
-Custom domains still get attached once in the dashboard (or via
-`wrangler deployments domains`), as above.
+**1. The worker** — already deployed as `er45`, live at
+`er45.patrik-pencinger.workers.dev`.
+
+**2. Custom domains** — on the `er45` worker → **Settings → Domains** →
+**Add Domain**, add all three (these are already added):
+`er45.com`, `www.er45.com`, `archiv.er45.com`.
+
+> Apex/`www` first needed the old IONOS `A` records (→ 216.250.121.143) deleted
+> from the er45.com DNS zone so Cloudflare could create the Worker records. The
+> `MX` (Google Workspace email) and other subdomain records were left untouched.
+
+**3. Redeploy after the `worker.js` change** — the host-routing script + the
+`wrangler.toml` `[assets]` `run_worker_first/binding` change must be deployed:
+- If the worker is connected to the GitHub repo (Workers Builds), a `git push`
+  to `main` redeploys automatically.
+- Otherwise deploy from the terminal:
+
+  ```powershell
+  npm i -g wrangler     # once
+  wrangler login        # once, opens browser
+  wrangler deploy       # from the repo root
+  ```
+
+After it deploys: `https://er45.com` and `https://www.er45.com` show the memorial;
+`https://archiv.er45.com` shows the archive.
 
 ---
 
-## Fallback: your own server (the old site ran on IIS)
-Serve two roots — **nginx:**
+## Fallback: your own server
+Two roots, **nginx:**
 
 ```nginx
 server { server_name er45.com www.er45.com; root /var/www/er45;        index index.html; }
-server { server_name archive.er45.com;       root /var/www/er45/archive; index index.html; }
+server { server_name archiv.er45.com;        root /var/www/er45/archive; index index.html; }
 ```
-
-**IIS:** two sites — `er45.com`/`www` → repo folder; `archive.er45.com` → the
-`archive` subfolder. HTTPS via win-acme. All plain static content (no ASP/.mdb).
+(No Worker script needed here — each vhost points straight at its folder.)

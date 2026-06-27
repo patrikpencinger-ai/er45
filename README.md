@@ -61,9 +61,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .claude/serve.ps1
 (Port 8200 — chosen so it never clashes with the daily-dashboard server on 8100.)
 
 ## Deploy (Cloudflare)
-Two static-asset Workers from this one repo (see **`DEPLOY.md`** for exact steps):
-- **`er45`** — `wrangler.toml`, root `./` → `er45.com` + `www.er45.com` (memorial).
-- **`er45-archive`** — `archive/wrangler.toml`, project root `archive` → `archive.er45.com`.
+**One** static-asset Worker (`er45`) serves both sites, routed by hostname in
+`worker.js` (see **`DEPLOY.md`**):
+- `er45.com` + `www.er45.com` → the memorial (`index.html`).
+- `archiv.er45.com` → the archive (rewritten onto the `archive/` subtree).
+
+All three are custom domains on the one worker; `git push` redeploys.
 
 ## Notes
 - This project is **independent** of `daily-dashboard`; they only ever shared a
