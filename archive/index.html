@@ -14,7 +14,7 @@
     /* palette sampled from the memorial artwork: navy sky, stone, moss, candle */
     --bg0:#1b2735; --bg1:#233044; --panel:#27363f; --line:#46596a;
     --ink:#e9efe6; --dim:#94a39b; --stone:#cdd6cd; --moss:#9cbf4c;
-    --green:#7bf06a; --green-d:#1f3d16; --amber:#ffb53d;
+    --green:#2fe0c4; --green-d:#10544a; --amber:#ffb53d;
     --beige:#dccfb0; --beige-d:#ab9e78; --ink-dark:#1b2530;
     --font:'VT323','Courier New', ui-monospace, monospace;
     --px:'Press Start 2P','VT323', monospace;
@@ -28,7 +28,7 @@
   body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
     background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 2px, transparent 2px 4px);opacity:.4}
   a{color:var(--green);text-decoration:none}
-  a:hover{text-shadow:0 0 8px rgba(123,240,106,.6)}
+  a:hover{text-shadow:0 0 8px rgba(47,224,196,.6)}
   .wrap{max-width:1080px;margin:0 auto;padding:0 16px;position:relative;z-index:2}
 
   /* ---------- header ---------- */
@@ -37,7 +37,7 @@
     border-bottom:2px solid var(--line);box-shadow:0 3px 0 rgba(0,0,0,.35)}
   .head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:16px 0 10px}
   .logo{font-family:var(--px);font-size:clamp(15px,3.6vw,23px);letter-spacing:.02em;color:var(--green);
-    line-height:1.15;text-shadow:0 3px 0 var(--green-d), 0 0 14px rgba(123,240,106,.35)}
+    line-height:1.15;text-shadow:0 3px 0 var(--green-d), 0 0 14px rgba(47,224,196,.35)}
   .logo .slash{color:var(--dim);text-shadow:none;margin:0 .12em}
   .logo .arc{color:var(--stone);text-shadow:0 3px 0 #11202a}
   .tag{color:var(--moss);letter-spacing:.1em;font-size:clamp(14px,2.4vw,17px);text-transform:uppercase}
@@ -60,7 +60,7 @@
     padding:.25em 1em;border-radius:5px;font-size:17px;letter-spacing:.06em;text-transform:uppercase;
     box-shadow:0 3px 0 rgba(0,0,0,.3);transition:.1s}
   .tab:hover{color:var(--ink);border-color:#5e7284}
-  .tab.on{color:var(--ink-dark);background:var(--green);border-color:#4fae42;box-shadow:0 3px 0 #1f3d16}
+  .tab.on{color:var(--ink-dark);background:var(--green);border-color:#1fae9a;box-shadow:0 3px 0 #0f5249}
 
   /* controls */
   .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0 14px}
@@ -73,7 +73,7 @@
   .yr{cursor:pointer;border:2px solid var(--line);background:var(--panel);color:var(--dim);font-family:var(--font);
     font-size:16px;padding:.1em .55em;border-radius:4px}
   .yr:hover{color:var(--ink)}
-  .yr.on{background:var(--green);color:var(--ink-dark);border-color:#4fae42}
+  .yr.on{background:var(--green);color:var(--ink-dark);border-color:#1fae9a}
   .count{color:var(--dim);font-size:16px;letter-spacing:.04em;margin:0 0 10px}
   .count b{color:var(--moss)}
 
@@ -81,7 +81,7 @@
   .yhead{font-family:var(--px);color:var(--moss);letter-spacing:.04em;font-size:clamp(12px,2.4vw,15px);margin:24px 0 8px;
     border-bottom:2px solid var(--line);padding-bottom:8px;text-shadow:0 2px 0 #1c3310}
   .row{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:9px 8px;border-bottom:1px solid rgba(70,89,106,.4)}
-  .row:hover{background:rgba(123,240,106,.05)}
+  .row:hover{background:rgba(47,224,196,.06)}
   .row .d{color:var(--green);font-size:17px;letter-spacing:.02em;white-space:nowrap}
   .row .d small{display:block;color:var(--dim);font-size:14px;letter-spacing:.06em}
   .row .nm{font-size:20px;color:var(--ink);letter-spacing:.01em}
@@ -298,9 +298,11 @@ function chronoFiltered(){
     const hay=(p.name+' '+(p.venue||'')+' '+(p.genre||'')+' '+arrify(p.lineup).join(' ')).toLowerCase();
     return hay.includes(q);
   });
+  const key=p=>{ const d=dpart(p.date); return (d && d.slice(0,4)!=='0000') ? d : ''; };
   return rows.slice().sort((a,b)=>{
-    const da=dpart(a.date)||'9999', db=dpart(b.date)||'9999';
-    return da<db?-1:da>db?1:(a.id-b.id);
+    const ka=key(a), kb=key(b);                       // newest first; undated last
+    if(ka&&kb) return ka<kb?1:ka>kb?-1:(b.id-a.id);
+    if(ka) return -1; if(kb) return 1; return b.id-a.id;
   });
 }
 function renderChrono(reset=true){
