@@ -1,100 +1,68 @@
-# Going live — er45.com (memorial) + archive.er45.com (archive)
+# Going live on Cloudflare — er45.com (memorial) + archive.er45.com (archive)
 
-Both sites are **static** (HTML + JSON + images), so hosting is simple and can be
-free. The shape we need:
+Both sites are **static** (HTML + JSON + images), deployed the same way as the
+other projects: a Cloudflare **static-asset Worker** per site, built from the
+GitHub repo. The shape:
 
-| Hostname | Serves | Document root |
-|----------|--------|---------------|
-| `er45.com` and `www.er45.com` | the **memorial** | repo root (`er45.html` as the index) |
-| `archive.er45.com` | the **archive** | the `archive/` folder |
+| Hostname | Project | Project root | wrangler.toml | Serves |
+|----------|---------|--------------|---------------|--------|
+| `er45.com` + `www.er45.com` | **er45** | `/` (repo root) | `wrangler.toml` | the memorial (`index.html`) |
+| `archive.er45.com` | **er45-archive** | `archive` | `archive/wrangler.toml` | the archive (`archive/index.html`) |
 
-The cross-links already auto-switch: in production the memorial points at
-`https://archive.er45.com/` and the archive's back-link at `https://er45.com/`;
-on localhost they stay path-based. So nothing in the code needs to change to deploy.
+The cross-links auto-switch in production (memorial → `archive.er45.com`, archive
+back-link → `er45.com`); on localhost they stay path-based. Nothing in the code
+changes to deploy.
 
-Because the two hostnames serve **different folders**, the clean pattern is
-**two static sites/projects from this one repo** — one rooted at the repo, one
-rooted at `archive/`.
-
----
-
-## Recommended: Cloudflare Pages (free, HTTPS, easy subdomains)
-
-Prereq: er45.com using **Cloudflare nameservers** (Cloudflare → Add a site →
-follow the nameserver change at your registrar). Then DNS + hosting are in one place.
-
-**Site 1 — memorial (er45.com + www):**
-1. Push this repo to GitHub/GitLab (see "Push the repo" below), or use *Direct Upload*.
-2. Cloudflare → **Workers & Pages → Create → Pages →** connect the repo.
-   - Build command: *(none)* · Build output directory: **`/`** (repo root).
-3. Pages project → **Custom domains** → add `er45.com` **and** `www.er45.com`.
-   Cloudflare creates the records and certs automatically.
-4. Set the index: a Pages root serves `index.html` by default, but ours is
-   `er45.html`. Either rename/copy it to `index.html`, or add a `_redirects`
-   line (already provided below) so `/` serves the memorial.
-
-**Site 2 — archive (archive.er45.com):**
-1. Create a **second** Pages project from the same repo.
-2. Build output directory: **`archive`**.
-3. Custom domain → add `archive.er45.com`.
-
-That's it — `archive/index.html` is the subdomain's index automatically.
-
-> If you'd rather not move nameservers to Cloudflare: same two-project setup works
-> on **Netlify** (set each site's *base/publish* dir to `/` and `archive`
-> respectively, add the custom domains, and at your current DNS add the records
-> Netlify shows — typically a CNAME for `www`/`archive` and an ALIAS/A for the apex).
+The repo is pushed to **github.com/patrikpencinger-ai/er45** (`main`).
 
 ---
 
-## Alternative: your own server (the old site ran on IIS)
+## One-time setup in the Cloudflare dashboard
 
-Serve two roots. **nginx:**
+### Project 1 — the memorial (er45.com + www)
+1. **Workers & Pages → Create → Workers → Import a repository →** pick
+   `patrikpencinger-ai/er45`.
+2. Leave the **root directory** as `/`. It picks up `wrangler.toml`
+   (`name = "er45"`, `[assets] directory = "./"`). No build command.
+3. Deploy. Then **Settings → Domains & Routes → Add → Custom domain** and add
+   **both** `er45.com` and `www.er45.com`. Cloudflare adds the DNS records and
+   the TLS cert automatically (er45.com is already on Cloudflare).
 
-```nginx
-server {                                   # memorial
-  server_name er45.com www.er45.com;
-  root /var/www/er45;                       # this repo
-  index er45.html index.html;
-  location / { try_files $uri $uri/ /er45.html; }
-}
-server {                                   # archive
-  server_name archive.er45.com;
-  root /var/www/er45/archive;               # the archive/ folder
-  index index.html;
-}
-```
+### Project 2 — the archive (archive.er45.com)
+1. **Create → Workers → Import a repository →** pick the **same** repo
+   `patrikpencinger-ai/er45` again.
+2. Set the **root directory** to **`archive`** so it uses `archive/wrangler.toml`
+   (`name = "er45-archive"`). No build command.
+3. Deploy, then add the custom domain **`archive.er45.com`**.
 
-**IIS:** create two sites — bindings `er45.com`,`www.er45.com` → repo folder
-(set Default Document to `er45.html`); binding `archive.er45.com` → the `archive`
-subfolder. Add HTTPS via *Let's Encrypt (win-acme)*. The `.mdb`/ASP bits are NOT
-needed — this is plain static content.
+That's it — pushing to `main` redeploys both projects.
 
-DNS for the own-server path (replace `<IP>` with the server's public IP):
-
-```
-er45.com.          A      <IP>
-www.er45.com.      CNAME  er45.com.
-archive.er45.com.  CNAME  er45.com.
-```
+> If the Cloudflare GitHub app uses "only selected repos", grant it access to the
+> new `er45` repo first (GitHub → Settings → Applications → Cloudflare → repo access).
 
 ---
 
-## Push the repo (needed for the git-connected hosts)
+## CLI alternative (wrangler)
+If you'd rather deploy from the terminal instead of the dashboard:
 
 ```powershell
-# create an empty repo on GitHub first (e.g. er45), then:
-git remote add origin https://github.com/<you>/er45.git
-git push -u origin main
+npm i -g wrangler        # if not installed
+wrangler login           # opens browser, authorises your Cloudflare account
+wrangler deploy                       # from repo root  -> project "er45"
+wrangler deploy -c archive/wrangler.toml   # -> project "er45-archive"
+```
+Custom domains still get attached once in the dashboard (or via
+`wrangler deployments domains`), as above.
+
+---
+
+## Fallback: your own server (the old site ran on IIS)
+Serve two roots — **nginx:**
+
+```nginx
+server { server_name er45.com www.er45.com; root /var/www/er45;        index index.html; }
+server { server_name archive.er45.com;       root /var/www/er45/archive; index index.html; }
 ```
 
-## Cloudflare/Netlify root redirect (serve er45.html at /)
-
-A `_redirects` file is included at the repo root:
-
-```
-/    /er45.html    200
-```
-
-This makes `/` serve the memorial without renaming the file. (Ignored by hosts
-that don't use it; harmless.)
+**IIS:** two sites — `er45.com`/`www` → repo folder; `archive.er45.com` → the
+`archive` subfolder. HTTPS via win-acme. All plain static content (no ASP/.mdb).

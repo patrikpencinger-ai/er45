@@ -1,0 +1,8 @@
+name = "er45"
+compatibility_date = "2026-06-01"
+
+# Static-asset-only Worker: serve the repo root as the memorial site.
+# index.html (the memorial) is served at /. No build step, no Worker script.
+# archive.er45.com is a SEPARATE project rooted at ./archive (archive/wrangler.toml).
+[assets]
+directory = "./"

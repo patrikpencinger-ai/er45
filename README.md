@@ -7,7 +7,7 @@ lands on the bare `er45.com` root gets this memorial.
 > "The lights went out, but the bass remains."
 
 ## Files
-- **`er45.html`** — the whole thing, self-contained (no build step):
+- **`index.html`** — the memorial, self-contained (no build step):
   - Pixel-art club scene rendered into a low-res canvas buffer (turntables,
     mixer, speaker stack with beat-punching woofers, moving-head lights, disco
     ball, fog, heartbeat lines).
@@ -59,6 +59,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .claude/serve.ps1
 ```
 
 (Port 8200 — chosen so it never clashes with the daily-dashboard server on 8100.)
+
+## Deploy (Cloudflare)
+Two static-asset Workers from this one repo (see **`DEPLOY.md`** for exact steps):
+- **`er45`** — `wrangler.toml`, root `./` → `er45.com` + `www.er45.com` (memorial).
+- **`er45-archive`** — `archive/wrangler.toml`, project root `archive` → `archive.er45.com`.
 
 ## Notes
 - This project is **independent** of `daily-dashboard`; they only ever shared a
