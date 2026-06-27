@@ -48,15 +48,42 @@
   <a class="sr" data-archive href="/archive/">Enter the ER45 archive</a>
 
 <script>
-/* No audio, no canvas — just the artwork + the archive link.
-   Route the archive link to the archiv.er45.com subdomain in production;
-   keep the /archive/ path locally so the static server still works. */
+/* No audio. Route the archive link to the archiv.er45.com subdomain in
+   production; keep the /archive/ path locally so the static server still works. */
 (() => {
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||
     /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
   const href = isLocal ? '/archive/' : (location.protocol + '//archiv.' + h.replace(/^www\./,'') + '/');
   document.querySelectorAll('[data-archive]').forEach(a => a.setAttribute('href', href));
+})();
+
+/* Edge-blend: sample the artwork's top + bottom edge colours and paint the page
+   background to match, so the letterbox blends in. Auto-adapts if the image is
+   swapped (same-origin, so the canvas isn't tainted). CSS gradient is the fallback. */
+(() => {
+  const img = document.querySelector('.scene img'); if(!img) return;
+  const sample = () => {
+    try{
+      const w = img.naturalWidth, h = img.naturalHeight; if(!w || !h) return;
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      const ctx = cv.getContext('2d', { willReadFrequently:true });
+      ctx.drawImage(img, 0, 0);
+      const band = (y0, y1) => {
+        let r=0,g=0,b=0,n=0;
+        for(let y=y0; y<y1; y++){
+          const d = ctx.getImageData(0, y, w, 1).data;
+          for(let i=0; i<d.length; i+=4){ if(d[i+3]>10){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; } }
+        }
+        n = n || 1; return `rgb(${Math.round(r/n)},${Math.round(g/n)},${Math.round(b/n)})`;
+      };
+      const k = Math.max(1, Math.round(h*0.01));           // ~1% band, min 1px
+      const top = band(0, k), bot = band(h-k, h);
+      document.body.style.background =
+        `linear-gradient(to bottom, ${top} 0%, ${top} 47%, ${bot} 53%, ${bot} 100%)`;
+    }catch(e){ /* keep the CSS fallback */ }
+  };
+  img.complete ? sample() : img.addEventListener('load', sample, { once:true });
 })();
 </script>
 </body>
