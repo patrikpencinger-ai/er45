@@ -6,32 +6,39 @@
 <title>ER45</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <meta name="description" content="A memorial for ER45.com. The lights went out, but the bass remains. The infrastructure continues in the subdomains." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
-  :root{ --green:#7bf06a; --cyan:#36d6ff; --font:"Courier New", ui-monospace, monospace; }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:#233044;color:#e9eefb;font-family:var(--font);overflow:hidden}
-  /* page bg matches the artwork's top edge (#233044) and bottom edge (#364751),
-     so the letterbox above/below the image blends in and the image seems endless.
-     The 47-53% blend band sits behind the centred image, so it's never visible. */
-  body{background:linear-gradient(to bottom, #233044 0%, #233044 47%, #364751 53%, #364751 100%)}
+  /* fixed background colour, matching the artwork's top (sky) edge */
+  html,body{margin:0;height:100%;background:#233044;color:#e9eefb;font-family:"Courier New",ui-monospace,monospace;overflow:hidden}
 
   .stage{position:fixed;inset:0;display:grid;place-items:end center}
-  /* the scene keeps the artwork's aspect ratio and fits the viewport */
+  /* the scene keeps the artwork's aspect ratio and fits the viewport, bottom-aligned */
   .scene{position:relative;aspect-ratio:1024/559;width:min(100vw, calc(100vh * 1024 / 559));
     max-height:100vh;image-rendering:pixelated}
   .scene img{width:100%;height:100%;display:block;image-rendering:pixelated;user-select:none;-webkit-user-drag:none}
 
-  /* clickable hotspots over the artwork's "Pay Respects" button + subdomains line */
-  .hot{position:absolute;display:block;border-radius:8px;cursor:pointer;
-    outline:2px solid transparent;transition:outline-color .15s, box-shadow .15s, background .15s}
-  .hot:hover,.hot:focus-visible{outline-color:rgba(123,240,106,.65);
-    background:rgba(123,240,106,.08);box-shadow:0 0 22px rgba(123,240,106,.30)}
-  /* the archive link sits right over the drawn "Pay Respects" button */
+  /* invisible click target over the drawn "Pay Respects" button — no hover visual */
+  .hot{position:absolute;display:block;cursor:pointer}
   .hot.respects{left:38%;top:79%;width:24%;height:12.5%}
-  .hot.subs{left:22%;top:91.5%;width:56%;height:7%}
+
+  /* top-right pixel links */
+  .corner{position:fixed;top:14px;right:14px;z-index:10;display:flex;gap:10px}
+  .plink{font-family:'Press Start 2P',ui-monospace,monospace;font-size:10px;line-height:1;letter-spacing:.04em;
+    color:var(--c,#e9eef0);text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;
+    background:rgba(8,12,20,.55);padding:.85em .95em;border-radius:4px;
+    text-shadow:0 0 8px currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.25);
+    transition:transform .1s, filter .15s}
+  .plink:hover{filter:brightness(1.25)}
+  .plink:active{transform:translateY(2px);border-bottom-width:2px}
+  .plink.archive{--c:#38c6f5}
+  .plink.dynamic{--c:#f46cf4}
 
   /* screen-reader / keyboard fallback */
   .sr{position:absolute;left:-9999px}
+  @media (max-width:480px){ .plink{font-size:8px;padding:.8em} .corner{gap:8px;top:10px;right:10px} }
 </style>
 </head>
 <body>
@@ -39,51 +46,29 @@
     <div class="scene">
       <img src="assets/memorial.png"
            alt="R.I.P. ER45.COM — a pixel-art tombstone with a dead tree and a lit candle. 'The lights went out, but the bass remains.' End of an Era. The infrastructure continues in the subdomains." />
-      <!-- both the drawn 'Pay Respects' button and the 'subdomains' line lead to the archive -->
-      <a class="hot respects" data-archive href="/archive/" aria-label="Enter the ER45 archive" title="Enter the ER45 archive"></a>
-      <a class="hot subs" data-archive href="/archive/" aria-label="The infrastructure continues in the subdomains — open the archive" title="The infrastructure continues in the subdomains"></a>
+      <!-- the drawn "Pay Respects" button enters the archive (no hover visual) -->
+      <a class="hot respects" data-archive href="/archive/" aria-label="Pay respects — enter the ER45 archive" title="Pay respects — enter the archive"></a>
     </div>
   </main>
+
+  <!-- two pixel links, top-right -->
+  <nav class="corner">
+    <a class="plink archive" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
+    <a class="plink dynamic" href="/dynamic.html" title="ER45 — the needle still remembers">DYNAMIC</a>
+  </nav>
 
   <a class="sr" data-archive href="/archive/">Enter the ER45 archive</a>
 
 <script>
-/* No audio. Route the archive link to the archiv.er45.com subdomain in
-   production; keep the /archive/ path locally so the static server still works. */
+/* No audio. Route every archive link to the archiv.er45.com subdomain in
+   production; keep the /archive/ path locally so the static server still works.
+   (The DYNAMIC link is a plain /dynamic.html path — works in both.) */
 (() => {
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||
     /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
   const href = isLocal ? '/archive/' : (location.protocol + '//archiv.' + h.replace(/^www\./,'') + '/');
   document.querySelectorAll('[data-archive]').forEach(a => a.setAttribute('href', href));
-})();
-
-/* Edge-blend: sample the artwork's top + bottom edge colours and paint the page
-   background to match, so the letterbox blends in. Auto-adapts if the image is
-   swapped (same-origin, so the canvas isn't tainted). CSS gradient is the fallback. */
-(() => {
-  const img = document.querySelector('.scene img'); if(!img) return;
-  const sample = () => {
-    try{
-      const w = img.naturalWidth, h = img.naturalHeight; if(!w || !h) return;
-      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
-      const ctx = cv.getContext('2d', { willReadFrequently:true });
-      ctx.drawImage(img, 0, 0);
-      const band = (y0, y1) => {
-        let r=0,g=0,b=0,n=0;
-        for(let y=y0; y<y1; y++){
-          const d = ctx.getImageData(0, y, w, 1).data;
-          for(let i=0; i<d.length; i+=4){ if(d[i+3]>10){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; } }
-        }
-        n = n || 1; return `rgb(${Math.round(r/n)},${Math.round(g/n)},${Math.round(b/n)})`;
-      };
-      const k = Math.max(1, Math.round(h*0.01));           // ~1% band, min 1px
-      const top = band(0, k), bot = band(h-k, h);
-      document.body.style.background =
-        `linear-gradient(to bottom, ${top} 0%, ${top} 47%, ${bot} 53%, ${bot} 100%)`;
-    }catch(e){ /* keep the CSS fallback */ }
-  };
-  img.complete ? sample() : img.addEventListener('load', sample, { once:true });
 })();
 </script>
 </body>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ER45 — the needle still remembers</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<meta name="description" content="ER45 — an interactive turntable loop. The needle still remembers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#04070c;overflow:hidden}
+  /* the dynamic experience fills the viewport; it runs inside the iframe, so the
+     overlay links below live in this outer document and are never replaced by it */
+  .exp{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#04070c}
+
+  /* dark loader masks the artifact's light unpacking background until it swaps to the dark experience */
+  #loader{position:fixed;inset:0;z-index:8;display:grid;place-items:center;background:#04070c;
+    transition:opacity .6s ease;font-family:'Press Start 2P',ui-monospace,monospace;
+    color:#54f3f3;font-size:12px;letter-spacing:.2em;text-shadow:0 0 12px #54f3f3}
+  #loader.gone{opacity:0;pointer-events:none}
+  @keyframes blink{50%{opacity:.25}}
+  #loader span{animation:blink 1.1s steps(1) infinite}
+
+  /* top-right pixel links, overlaid on the experience */
+  .corner{position:fixed;top:14px;right:14px;z-index:10;display:flex;gap:10px}
+  .plink{font-family:'Press Start 2P',ui-monospace,monospace;font-size:10px;line-height:1;letter-spacing:.04em;
+    color:var(--c,#faf6ef);text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;
+    background:rgba(4,7,12,.62);padding:.85em .95em;border-radius:4px;
+    text-shadow:0 0 8px currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.3);
+    transition:transform .1s, filter .15s}
+  .plink:hover{filter:brightness(1.25)}
+  .plink:active{transform:translateY(2px);border-bottom-width:2px}
+  .plink.stat{--c:#7bf06a}
+  .plink.archive{--c:#38c6f5}
+  @media (max-width:480px){ .plink{font-size:8px;padding:.8em} .corner{gap:8px;top:10px;right:10px} }
+</style>
+</head>
+<body>
+  <iframe class="exp" src="er45-loop.html" title="ER45 — the needle still remembers" allow="autoplay; fullscreen"></iframe>
+  <div id="loader">ER45<span>_</span></div>
+
+  <nav class="corner">
+    <a class="plink stat" href="/" title="Back to the memorial">STATIC</a>
+    <a class="plink archive" data-archive href="/archive/" title="The ER45 archive">ARCHIVE</a>
+  </nav>
+
+<script>
+/* Route the ARCHIVE link to archiv.er45.com in production; /archive/ locally.
+   STATIC stays "/" — the tombstone memorial at the site root. */
+(() => {
+  const h = location.hostname;
+  const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||
+    /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  const href = isLocal ? '/archive/' : (location.protocol + '//archiv.' + h.replace(/^www\./,'') + '/');
+  document.querySelectorAll('[data-archive]').forEach(a => a.setAttribute('href', href));
+})();
+
+/* Hide the dark loader once the experience has had a moment to unpack inside the
+   iframe (the bundler swaps to its dark scene shortly after the frame's load). */
+(() => {
+  const loader = document.getElementById('loader'), ifr = document.querySelector('.exp');
+  const hide = () => loader && loader.classList.add('gone');
+  if (ifr) ifr.addEventListener('load', () => setTimeout(hide, 1200));
+  setTimeout(hide, 5000); // fallback so it never sticks
+})();
+</script>
+</body>
+</html>
