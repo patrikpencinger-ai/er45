@@ -43,13 +43,13 @@
   <div id="loader">ER45<span>_</span></div>
 
   <nav class="corner">
-    <a class="plink stat" href="/" title="Back to the memorial">STATIC</a>
+    <a class="plink stat" href="/rip.html" title="Back to the memorial tombstone">STATIC</a>
     <a class="plink archive" data-archive href="/archive/" title="The ER45 archive">ARCHIVE</a>
   </nav>
 
 <script>
 /* Route the ARCHIVE link to archiv.er45.com in production; /archive/ locally.
-   STATIC stays "/" — the tombstone memorial at the site root. */
+   STATIC goes to /rip.html — the tombstone memorial. */
 (() => {
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||

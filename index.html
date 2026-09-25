@@ -5,24 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ER45</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-<meta name="description" content="A memorial for ER45.com. The lights went out, but the bass remains. The infrastructure continues in the subdomains." />
+<meta name="description" content="ER45.com — one last night at the club: twin turntables, moving lights, ER45 on the LED wall. The lights went out, but the bass remains. The infrastructure continues in the subdomains." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 <style>
   *{box-sizing:border-box}
-  /* fixed background colour, matching the artwork's top (sky) edge */
-  html,body{margin:0;height:100%;background:#233044;color:#e9eefb;font-family:"Courier New",ui-monospace,monospace;overflow:hidden}
+  html,body{margin:0;height:100%;background:#0b0f16;color:#e9eefb;font-family:"Courier New",ui-monospace,monospace;overflow:hidden}
 
-  .stage{position:fixed;inset:0;display:grid;place-items:end center}
-  /* the scene keeps the artwork's aspect ratio and fits the viewport, bottom-aligned */
-  .scene{position:relative;aspect-ratio:1024/559;width:min(100vw, calc(100vh * 1024 / 559));
-    max-height:100vh;image-rendering:pixelated}
-  .scene img{width:100%;height:100%;display:block;image-rendering:pixelated;user-select:none;-webkit-user-drag:none}
-
-  /* invisible click target over the drawn "Pay Respects" button — no hover visual */
-  .hot{position:absolute;display:block;cursor:pointer}
-  .hot.respects{left:38%;top:79%;width:24%;height:12.5%}
+  /* the club: a low-res buffer blitted at an integer scale, nearest-neighbour */
+  #club{position:fixed;inset:0;width:100%;height:100%;display:block;background:#0b0f16;
+    image-rendering:crisp-edges;image-rendering:pixelated;z-index:0}
+  /* light CRT scanlines + vignette (purely decorative, never intercepts clicks) */
+  .crt{position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%),
+      repeating-linear-gradient(to bottom, rgba(0,0,0,.13) 0 1px, rgba(0,0,0,0) 1px 3px)}
 
   /* top-right pixel links */
   .corner{position:fixed;top:14px;right:14px;z-index:10;display:flex;gap:10px}
@@ -35,6 +33,7 @@
   .plink:active{transform:translateY(2px);border-bottom-width:2px}
   .plink.archive{--c:#38c6f5}
   .plink.dynamic{--c:#f46cf4}
+  .plink.rip{--c:#cdd6cd}
 
   /* screen-reader / keyboard fallback */
   .sr{position:absolute;left:-9999px}
@@ -42,22 +41,16 @@
 </style>
 </head>
 <body>
-  <main class="stage">
-    <div class="scene">
-      <img src="assets/memorial.png"
-           alt="R.I.P. ER45.COM — a pixel-art tombstone with a dead tree and a lit candle. 'The lights went out, but the bass remains.' End of an Era. The infrastructure continues in the subdomains." />
-      <!-- the drawn "Pay Respects" button enters the archive (no hover visual) -->
-      <a class="hot respects" data-archive href="/archive/" aria-label="Pay respects — enter the ER45 archive" title="Pay respects — enter the archive"></a>
-    </div>
-  </main>
+  <h1 class="sr">ER45</h1>
+  <canvas id="club" role="img" aria-label="Animated pixel-art nightclub: DJ at twin turntables under moving-head lights, ER45 on the LED wall, a dancing crowd"></canvas>
+  <div class="crt" aria-hidden="true"></div>
 
-  <!-- two pixel links, top-right -->
+  <!-- three pixel links, top-right -->
   <nav class="corner">
     <a class="plink archive" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
     <a class="plink dynamic" href="/dynamic.html" title="ER45 — the needle still remembers">DYNAMIC</a>
+    <a class="plink rip" href="/rip.html" title="The memorial — R.I.P. ER45.COM">R.I.P.</a>
   </nav>
-
-  <a class="sr" data-archive href="/archive/">Enter the ER45 archive</a>
 
 <script>
 /* No audio. Route every archive link to the archiv.er45.com subdomain in
@@ -69,6 +62,1112 @@
     /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
   const href = isLocal ? '/archive/' : (location.protocol + '//archiv.' + h.replace(/^www\./,'') + '/');
   document.querySelectorAll('[data-archive]').forEach(a => a.setAttribute('href', href));
+})();
+</script>
+
+<script>
+/* ER45 — code-drawn pixel-art club. Everything is drawn with fillRect into a small
+   low-res buffer (~360 px wide landscape, ~240 px portrait) and blitted to the
+   full-viewport canvas at an integer scale with smoothing off. A silent 128 BPM
+   beat clock drives the crowd, lights, LED wall, VU meters and woofers.
+   Photosensitivity: nothing flashes faster than once per beat (2.13 Hz), no
+   full-screen flashes; prefers-reduced-motion gets a calm, slow scene at 15 fps. */
+(() => {
+'use strict';
+
+const cv = document.getElementById('club');
+const ctx = cv && cv.getContext('2d', { alpha: false });
+if (!ctx) return;
+
+/* ---------- constants ---------- */
+const BPS = 128 / 60;
+const TAU = Math.PI * 2;
+const SEED = 0x0E45;
+const GLOW_PAD = 3;
+
+const PAL = [[56,198,245],[244,108,244],[123,240,106],[255,181,61],[84,243,243]]; // turq, magenta, green, amber, cyan
+const PAL_CSS = PAL.map(c => 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')');
+const STICKS = ['#7bf06a', '#54f3f3', '#f46cf4', '#ffb53d'];
+const STAR_CSS = ['#9fb4d6', '#38c6f5', '#f46cf4'];
+const RAMP = [[7,9,13],[11,15,22],[17,24,36],[22,31,43],[27,39,53],[35,48,68]];
+const BAYER = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+
+/* hand-defined 5x7 bitmap font for the LED-wall logo */
+const FONT7 = {
+  E: ['11111','10000','10000','11110','10000','10000','11111'],
+  R: ['11110','10001','10001','11110','10100','10010','10001'],
+  '4': ['00010','00110','01010','10010','11111','00010','00010'],
+  '5': ['11111','10000','11110','00001','00001','10001','01110']
+};
+/* tiny variable-width 5-row font for the ticker and the booth badge */
+const FONT5 = {
+  A: ['010','101','111','101','101'],
+  B: ['110','101','110','101','110'],
+  E: ['111','100','110','100','111'],
+  G: ['011','100','101','101','011'],
+  H: ['101','101','111','101','101'],
+  I: ['111','010','010','010','111'],
+  L: ['100','100','100','100','111'],
+  M: ['10001','11011','10101','10001','10001'],
+  N: ['1001','1101','1011','1001','1001'],
+  O: ['010','101','101','101','010'],
+  R: ['110','101','110','101','101'],
+  S: ['011','100','010','001','110'],
+  T: ['111','010','010','010','010'],
+  U: ['101','101','101','101','111'],
+  W: ['10001','10001','10101','11011','10001'],
+  '4': ['101','101','111','001','001'],
+  '5': ['111','100','110','001','110'],
+  '*': ['000','101','010','101','000'],
+  ' ': ['00','00','00','00','00']
+};
+const TICKER = 'THE LIGHTS WENT OUT BUT THE BASS REMAINS * ER45 * ';
+
+/* ---------- helpers ---------- */
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const frac = v => v - Math.floor(v);
+const smooth = t => t * t * (3 - 2 * t);
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function hash2(x, y) {
+  let h = (Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+function mk(w, h) {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, w | 0); c.height = Math.max(1, h | 0);
+  const x = c.getContext('2d');
+  x.imageSmoothingEnabled = false;
+  return [c, x];
+}
+/* pixel-crisp filled shapes (current fillStyle) */
+function disc(c, x, y, r) {
+  const rr = (r + 0.5) * (r + 0.5);
+  for (let dy = -r; dy <= r; dy++) {
+    const hw = Math.floor(Math.sqrt(rr - dy * dy));
+    c.fillRect(x - hw, y + dy, hw * 2 + 1, 1);
+  }
+}
+function ell(c, x, y, rx, ry) {
+  for (let dy = -ry; dy <= ry; dy++) {
+    const t = dy / (ry + 0.5);
+    const hw = Math.floor(rx * Math.sqrt(1 - t * t) + 0.5);
+    c.fillRect(x - hw, y + dy, hw * 2 + 1, 1);
+  }
+}
+/* integer Bresenham with a square brush of width w */
+function line(c, x0, y0, x1, y1, w) {
+  x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
+  if (!(isFinite(x0) && isFinite(y0) && isFinite(x1) && isFinite(y1))) return;
+  const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+  const dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+  const o = (w - 1) >> 1;
+  let err = dx + dy;
+  for (let n = 0; n < 4000; n++) {
+    c.fillRect(x0 - o, y0 - o, w, w);
+    if (x0 === x1 && y0 === y1) break;
+    const e2 = 2 * err;
+    if (e2 >= dy) { err += dy; x0 += sx; }
+    if (e2 <= dx) { err += dx; y0 += sy; }
+  }
+}
+function quad(c, ox, oy, dx, dy, px, py, d0, d1, w0, w1) {
+  c.beginPath();
+  c.moveTo(ox + dx * d0 - px * w0, oy + dy * d0 - py * w0);
+  c.lineTo(ox + dx * d0 + px * w0, oy + dy * d0 + py * w0);
+  c.lineTo(ox + dx * d1 + px * w1, oy + dy * d1 + py * w1);
+  c.lineTo(ox + dx * d1 - px * w1, oy + dy * d1 - py * w1);
+  c.closePath();
+  c.fill();
+}
+function textW5(str, s) {
+  let w = 0;
+  for (const ch of str) w += ((FONT5[ch] || FONT5[' '])[0].length + 1) * s;
+  return Math.max(0, w - s);
+}
+function text5(c, str, x, y, s) {
+  for (const ch of str) {
+    const g = FONT5[ch] || FONT5[' '];
+    const gw = g[0].length;
+    for (let r = 0; r < 5; r++) for (let k = 0; k < gw; k++) if (g[r][k] === '1') c.fillRect(x + k * s, y + r * s, s, s);
+    x += (gw + 1) * s;
+  }
+}
+function buildTicker(msg) {
+  const out = [];
+  for (const ch of msg) {
+    const g = FONT5[ch] || FONT5[' '];
+    for (let k = 0; k < g[0].length; k++) {
+      let m = 0;
+      for (let r = 0; r < 5; r++) if (g[r][k] === '1') m |= 1 << r;
+      out.push(m);
+    }
+    out.push(0);
+  }
+  return Uint8Array.from(out);
+}
+/* horizontally periodic value noise (w must be a multiple of cell) */
+function vnoise(w, h, cell, rnd) {
+  const gx = Math.max(1, Math.round(w / cell)), gy = Math.ceil(h / cell) + 2;
+  const g = new Float32Array(gx * gy);
+  for (let i = 0; i < g.length; i++) g[i] = rnd();
+  const out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    const fy = y / cell, y0 = Math.floor(fy);
+    let ty = fy - y0; ty = ty * ty * (3 - 2 * ty);
+    for (let x = 0; x < w; x++) {
+      const fx = x / cell, x0 = Math.floor(fx);
+      let tx = fx - x0; tx = tx * tx * (3 - 2 * tx);
+      const xa = x0 % gx, xb = (x0 + 1) % gx;
+      const a = g[y0 * gx + xa], b = g[y0 * gx + xb], c = g[(y0 + 1) * gx + xa], d = g[(y0 + 1) * gx + xb];
+      const top = a + (b - a) * tx, bot = c + (d - c) * tx;
+      out[y * w + x] = top + (bot - top) * ty;
+    }
+  }
+  return out;
+}
+function blur3(a, w, h) {
+  const o = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0, n = 0;
+    for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
+      const xx = x + i, yy = y + j;
+      if (xx >= 0 && yy >= 0 && xx < w && yy < h) { s += a[yy * w + xx]; n++; }
+    }
+    o[y * w + x] = s / n;
+  }
+  return o;
+}
+
+const TICK = buildTicker(TICKER);
+
+/* ---------- reduced motion ---------- */
+const mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+let RM = !!(mq && mq.matches);
+if (mq) {
+  const onRM = e => { RM = e.matches; };
+  if (mq.addEventListener) mq.addEventListener('change', onRM);
+  else if (mq.addListener) mq.addListener(onRM);
+}
+
+/* ---------- state ---------- */
+let W = 0, H = 0, S = 1, DW = 0, DH = 0, OX = 0, OY = 0;
+let G = null;
+let buf = null, bctx = null, backCv = null, frontCv = null, beamCv = null, beamCtx = null;
+let hazeCv = null, fogCv = null, ledCv = null, ledCtx = null, ledImg = null, gridCv = null, glowCv = null;
+let ballCv = null, boothTextCv = null;
+let stars = [], specks = [], dancers = [];
+let eq = null, rowV = null, rowH = null, colV = null, rowS = null, colS = null;
+let fixTheta = null, fixCss = [], fixOX = null, fixOY = null, beamTY = null, beamEX = null, beamEY = null, beamEW = null;
+const handX = [0, 0], handY = [0, 0], handSX = [0, 0], handSY = [0, 0];
+
+let simT = 0, beat = 0, moveT = 0, rot = 0, tickPos = 0, plasmaT = 0;
+let hazeOff = 0, fogOff0 = 0, fogOff1 = 0;
+let bar = 0, phrase = 0, bip = 0, pulse = 0, kick = 1, energyNow = 1, crowdK = 1;
+let breakdown = false, buildUp = false, lasersOn = false, beamI = 1, vuL = 0, vuR = 0;
+
+let lastTs = 0, acc = 0, raf = 0, running = false, dirty = true, resizeAt = 0;
+
+/* ---------- layout (runs on load and after resize) ---------- */
+function viewW() { return Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1); }
+function viewH() { return Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1); }
+function viewDpr() { return Math.min(2, window.devicePixelRatio || 1); }
+
+function layout() {
+  const dpr = viewDpr(), vw = viewW(), vh = viewH();
+  DW = Math.max(1, Math.round(vw * dpr)); DH = Math.max(1, Math.round(vh * dpr));
+  cv.width = DW; cv.height = DH;
+  const portrait = vh > vw * 1.05;
+  S = Math.max(1, Math.round(Math.min(DW / (portrait ? 240 : 360), DH / (portrait ? 400 : 210))));
+  W = Math.ceil(DW / S); H = Math.ceil(DH / S);
+  OX = Math.floor((DW - W * S) / 2); OY = Math.floor((DH - H * S) / 2);
+
+  const rng = mulberry32(SEED);
+  const cx = W >> 1;
+  const A = portrait ? Math.round(H * 0.36) : clamp(Math.round(H * 0.29), 50, 90);
+  const stageY = H - A;
+  const bt = stageY - 48;              // booth top surface
+  const djTop = bt - 26;               // DJ head top
+  const wallBottom = bt + 2;
+  const wallW = portrait ? W - 16 : clamp(W - 100, 90, 240);
+  let trussY, wallTop;
+  if (portrait) {
+    const wallH = Math.min(150, Math.round(W * 0.56));
+    wallTop = wallBottom - wallH;
+    trussY = Math.max(6, wallTop - Math.max(26, Math.round(wallTop * 0.45)));
+    wallTop = Math.max(wallTop, trussY + 12);
+  } else {
+    trussY = 4; wallTop = trussY + 12;
+  }
+  const cols = Math.max(8, Math.floor((wallW - 4) / 3));
+  const wx0 = cx - Math.floor(cols * 3 / 2);
+  const wy0 = wallTop + 2;
+  const rows = Math.max(6, Math.floor((wallBottom - wy0) / 3));
+
+  /* logo: biggest integer scale that stays above the DJ's head */
+  const rowsMax = Math.max(7, Math.floor((djTop - 2 - wy0) / 3));
+  let s = 3;
+  while (s > 1 && (7 * s > rowsMax || 23 * s + 4 > cols)) s--;
+  const lr0 = Math.max(0, Math.floor((Math.min(rowsMax, rows) - 7 * s) / 2));
+  const lc0 = Math.floor((cols - 23 * s) / 2);
+  const tickRow = (rows - 6 >= lr0 + 7 * s + 1) ? rows - 6 : -1;
+
+  const nFix = clamp(Math.round(W / 64), 4, 6);
+  const fx = [];
+  for (let i = 0; i < nFix; i++) fx.push(Math.round(W * (i + 0.5) / nFix));
+  const laserX = (nFix & 1) ? cx + Math.round(W / (2 * nFix)) : cx;
+  const ballX = Math.round(W / nFix);
+  const ballR = portrait ? 7 : 6;
+  const ballY = portrait ? trussY + Math.max(ballR + 10, Math.round((wallTop - trussY) * 0.45)) : trussY + 24;
+
+  const sideC = Math.max(20, Math.round((cx - 60) / 2));
+  const stacks = [], woofers = [];
+  for (const x0 of [sideC - 18, W - sideC - 18]) {
+    const topY = stageY - 8 - 48, subY = topY + 22;
+    stacks.push({ x0, topY, subY });
+    woofers.push({ x: x0 + 18, y: topY + 15, r: 5 }, { x: x0 + 18, y: subY + 13, r: 10 });
+  }
+
+  const HW = Math.ceil(W / 32) * 32;
+  const FH = portrait ? 28 : 18;
+
+  const rowDefs = [
+    { top: stageY - 6, h: Math.round(16 + A * 0.05), n: Math.min(18, Math.round(W / 14)), col: ['#0a0e15', '#0c1119'], amp: 1, rim: 0.4, sway: 0 },
+    { top: stageY + Math.round(A * (portrait ? 0.2 : 0.16)), h: Math.round(20 + A * 0.11), n: Math.min(14, Math.round(W / 19)), col: ['#0c121b', '#0f1520'], amp: 2, rim: 0.65, sway: 1 },
+    { top: stageY + Math.round(A * (portrait ? 0.5 : 0.40)), h: Math.min(52, Math.round(26 + A * 0.19)), n: Math.min(10, Math.round(W / 30)), col: ['#0f1621', '#121a26', '#0d131d'], amp: 3, rim: 0.95, sway: 1 }
+  ];
+
+  G = {
+    vw, vh, dpr, portrait, cx, A, stageY, bt, djTop, trussY, wallTop, wallBottom, wx0, wy0, cols, rows,
+    s, lr0, lc0, tickRow, nFix, fx, laserX, ballX, ballY, ballR, stacks, woofers,
+    deckL: { x: cx - 34, lab: '#f46cf4' }, deckR: { x: cx + 34, lab: '#ffb53d' },
+    HW, FW: HW, FH,
+    fogY0: stageY - (FH >> 1) + 6,
+    fogY1: rowDefs[1].top + rowDefs[1].h - (FH >> 1),
+    spread: portrait ? 0.06 : 0.085
+  };
+
+  /* canvases */
+  [buf, bctx] = mk(W, H);
+  let backCtx, frontCtx;
+  [backCv, backCtx] = mk(W, H);
+  [frontCv, frontCtx] = mk(W, H);
+  [beamCv, beamCtx] = mk(W, H);
+  [ledCv, ledCtx] = mk(cols, rows);
+  ledImg = ledCtx.createImageData(cols, rows);
+
+  /* LED gap grid (panel seams every 8 LEDs) */
+  let gctx;
+  [gridCv, gctx] = mk(cols * 3, rows * 3);
+  gctx.fillStyle = '#04060a';
+  for (let i = 0; i < cols; i++) gctx.fillRect(i * 3 + 2, 0, 1, rows * 3);
+  for (let j = 0; j < rows; j++) gctx.fillRect(0, j * 3 + 2, cols * 3, 1);
+  gctx.fillStyle = '#18202d';
+  for (let i = 7; i < cols - 1; i += 8) gctx.fillRect(i * 3 + 2, 0, 1, rows * 3);
+  for (let j = 7; j < rows - 1; j += 8) gctx.fillRect(0, j * 3 + 2, cols * 3, 1);
+
+  /* logo mask: 1 = logo, 2 = dark outline */
+  const mask = new Uint8Array(cols * rows);
+  const word = 'ER45';
+  for (let k = 0; k < 4; k++) {
+    const g = FONT7[word[k]];
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) {
+      if (g[r][c] !== '1') continue;
+      for (let yy = 0; yy < s; yy++) for (let xx = 0; xx < s; xx++) {
+        const i = lc0 + (k * 6 + c) * s + xx, j = lr0 + r * s + yy;
+        if (i >= 0 && i < cols && j >= 0 && j < rows) mask[j * cols + i] = 1;
+      }
+    }
+  }
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+    if (mask[j * cols + i]) continue;
+    let near = false;
+    for (let b = -1; b <= 1 && !near; b++) for (let a = -1; a <= 1; a++) {
+      const ii = i + a, jj = j + b;
+      if (ii >= 0 && jj >= 0 && ii < cols && jj < rows && mask[jj * cols + ii] === 1) { near = true; break; }
+    }
+    if (near) mask[j * cols + i] = 2;
+  }
+  G.mask = mask;
+
+  /* pre-blurred green bloom for the logo */
+  const gw = cols + GLOW_PAD * 2, gh = rows + GLOW_PAD * 2;
+  let ga = new Float32Array(gw * gh);
+  for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) if (mask[j * cols + i] === 1) ga[(j + GLOW_PAD) * gw + i + GLOW_PAD] = 1;
+  ga = blur3(blur3(ga, gw, gh), gw, gh);
+  let glctx;
+  [glowCv, glctx] = mk(gw, gh);
+  const gim = glctx.createImageData(gw, gh);
+  for (let k = 0; k < gw * gh; k++) {
+    gim.data[k * 4] = 123; gim.data[k * 4 + 1] = 240; gim.data[k * 4 + 2] = 106;
+    gim.data[k * 4 + 3] = Math.min(255, ga[k] * 360);
+  }
+  glctx.putImageData(gim, 0, 0);
+
+  /* haze mask for the beams (tiled twice so one drawImage always covers the buffer) */
+  {
+    const n1 = vnoise(HW, H, 32, rng), n2 = vnoise(HW, H, 16, rng);
+    let hctx;
+    [hazeCv, hctx] = mk(HW * 2, H);
+    const im = hctx.createImageData(HW * 2, H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < HW; x++) {
+      const n = n1[y * HW + x] * 0.62 + n2[y * HW + x] * 0.38;
+      const a = Math.round(255 * (0.28 + 0.72 * n * n * (3 - 2 * n)));
+      for (let t = 0; t < 2; t++) {
+        const p = (y * HW * 2 + x + t * HW) * 4;
+        im.data[p] = 255; im.data[p + 1] = 255; im.data[p + 2] = 255; im.data[p + 3] = a;
+      }
+    }
+    hctx.putImageData(im, 0, 0);
+  }
+  /* low fog strip */
+  {
+    const n1 = vnoise(HW, FH, 16, rng), n2 = vnoise(HW, FH, 8, rng);
+    let fctx;
+    [fogCv, fctx] = mk(HW * 2, FH);
+    const im = fctx.createImageData(HW * 2, FH);
+    for (let y = 0; y < FH; y++) {
+      const bell = Math.sin(Math.PI * (y + 0.5) / FH);
+      for (let x = 0; x < HW; x++) {
+        const n = n1[y * HW + x] * 0.7 + n2[y * HW + x] * 0.3;
+        const a = Math.round(255 * clamp((n - 0.25) * 1.6, 0, 1) * bell);
+        for (let t = 0; t < 2; t++) {
+          const p = (y * HW * 2 + x + t * HW) * 4;
+          im.data[p] = 168; im.data[p + 1] = 188; im.data[p + 2] = 226; im.data[p + 3] = a;
+        }
+      }
+    }
+    fctx.putImageData(im, 0, 0);
+  }
+
+  /* sprites */
+  ballCv = buildBall(ballR);
+  {
+    let tctx;
+    [boothTextCv, tctx] = mk(textW5('ER45', 2), 10);
+    tctx.fillStyle = '#7bf06a';
+    text5(tctx, 'ER45', 0, 0, 2);
+  }
+
+  /* per-frame scratch arrays */
+  eq = new Float32Array(Math.ceil(cols / 3) + 1);
+  rowV = new Float32Array(rows); rowH = new Float32Array(rows); rowS = new Float32Array(rows);
+  colV = new Float32Array(cols); colS = new Float32Array(cols);
+  fixTheta = new Float32Array(nFix); fixOX = new Float32Array(nFix); fixOY = new Float32Array(nFix);
+  beamTY = new Float32Array(nFix); beamEX = new Float32Array(nFix); beamEY = new Float32Array(nFix); beamEW = new Float32Array(nFix);
+  fixCss = new Array(nFix).fill(PAL_CSS[0]);
+  for (let i = 0; i < nFix; i++) { beamEX[i] = fx[i]; beamEY[i] = stageY; }
+
+  /* star cloth on the back wall */
+  stars = [];
+  const nStars = Math.min(220, Math.round(W * stageY / 700));
+  for (let k = 0; k < nStars; k++) {
+    const y = Math.floor(rng() * (stageY - 10));
+    const st = { x: Math.floor(rng() * W), y, a: 0.25 + rng() * 0.6, sp: 0.6 + rng() * 1.6, ph: rng() * TAU, c: rng() < 0.8 ? 0 : (rng() < 0.5 ? 1 : 2) };
+    if (Math.abs(y - trussY - 3) > 4) stars.push(st);
+  }
+  stars.sort((a, b) => a.c - b.c);
+
+  /* disco-ball specks */
+  specks = [];
+  for (let k = 0; k < 60; k++) {
+    specks.push({ u: rng(), y: trussY + 4 + Math.floor(rng() * Math.max(1, stageY - trussY - 14)), a: 0.4 + rng() * 0.6, ph: rng() * TAU, w: rng() < 0.3 ? 2 : 1 });
+  }
+
+  /* the crowd: 3 depth rows, back rows smaller and darker */
+  dancers = [];
+  rowDefs.forEach((R, ri) => {
+    const sp = W / R.n;
+    for (let k = 0; k < R.n; k++) {
+      const h = R.h + Math.round((rng() - 0.5) * R.h * 0.14);
+      let x = Math.round((k + 0.5 + (rng() - 0.5) * 0.55 + (ri === 1 ? 0.5 : 0)) * sp);
+      x = ((x % W) + W) % W;
+      const hw = Math.max(3, Math.round(h * 0.27));
+      const hh = hw + (h > 24 ? 2 : 1);
+      const sw = Math.max(hw + 3, Math.round(h * (0.46 + rng() * 0.12)));
+      const aw = h >= 44 ? 3 : h >= 26 ? 2 : 1;
+      const r = rng();
+      const pose = r < 0.42 ? 0 : r < 0.62 ? 1 : r < 0.8 ? 2 : 3;   // down, wave, pump, one-up
+      const stick = (pose !== 0 && rng() < (ri === 0 ? 0.15 : 0.35)) ? STICKS[Math.floor(rng() * STICKS.length)] : null;
+      dancers.push({
+        x, top: R.top + Math.round((rng() - 0.5) * 3), h, hw, hh, sw, aw,
+        neck: h >= 30 ? 2 : 1, nw: Math.max(2, Math.round(hw * 0.5)),
+        col: R.col[Math.floor(rng() * R.col.length)], amp: R.amp, rim: R.rim, row: ri, pose, stick,
+        side: rng() < 0.5 ? -1 : 1, phase: rng(), half: rng() < 0.22,
+        hair: Math.floor(rng() * 4), swayAmp: R.sway, swayPh: rng() * TAU, lift: rng()
+      });
+    }
+  });
+
+  buildBack(backCtx);
+  buildFront(frontCtx);
+  ctx.imageSmoothingEnabled = false;
+}
+
+/* ---------- static layers ---------- */
+function buildBack(c) {
+  const { stageY, cx, trussY } = G;
+  /* ordered-dither gradient: dark ceiling, navy glow behind the stage, dark floor */
+  const img = c.createImageData(W, H);
+  const d = img.data;
+  const top = RAMP.length - 1.001;
+  for (let y = 0; y < H; y++) {
+    let base, gk;
+    if (y < stageY) { const t = y / Math.max(1, stageY); base = 0.9 + 2.6 * t * t; gk = 1.1 * t; }
+    else { const t = (y - stageY) / Math.max(1, H - stageY); base = 2.2 - 1.9 * t; gk = 0.7 * (1 - t); }
+    for (let x = 0; x < W; x++) {
+      const k = 1 - Math.abs(x - cx) / (W * 0.6);
+      let f = base + (k > 0 ? gk * k : 0);
+      f = f < 0 ? 0 : f > top ? top : f;
+      const lo = f | 0;
+      const col = (f - lo) * 16 > BAYER[((y & 3) << 2) | (x & 3)] + 0.5 ? RAMP[lo + 1] : RAMP[lo];
+      const p = (y * W + x) << 2;
+      d[p] = col[0]; d[p + 1] = col[1]; d[p + 2] = col[2]; d[p + 3] = 255;
+    }
+  }
+  c.putImageData(img, 0, 0);
+
+  /* chain hoists + truss lattice */
+  c.fillStyle = '#1f2835';
+  c.fillRect(Math.round(W * 0.18), 0, 1, trussY);
+  c.fillRect(Math.round(W * 0.82), 0, 1, trussY);
+  c.fillStyle = '#2f3a4a';
+  for (let x = 0, k = 0; x < W + 6; x += 6, k++) {
+    c.fillRect(x, trussY, 1, 6);
+    line(c, x, (k & 1) ? trussY + 5 : trussY, x + 6, (k & 1) ? trussY : trussY + 5, 1);
+  }
+  c.fillStyle = '#56657d'; c.fillRect(0, trussY, W, 1);
+  c.fillStyle = '#3a4556'; c.fillRect(0, trussY + 5, W, 1);
+
+  /* LED wall rigging + bezel */
+  const lw = G.cols * 3, lh = G.rows * 3;
+  c.fillStyle = '#1f2835';
+  c.fillRect(G.wx0 + 8, trussY + 6, 1, Math.max(0, G.wy0 - 3 - trussY - 6));
+  c.fillRect(G.wx0 + lw - 9, trussY + 6, 1, Math.max(0, G.wy0 - 3 - trussY - 6));
+  c.fillStyle = '#2a3342'; c.fillRect(G.wx0 - 3, G.wy0 - 3, lw + 5, lh + 5);
+  c.fillStyle = '#05070b'; c.fillRect(G.wx0 - 2, G.wy0 - 2, lw + 3, lh + 3);
+}
+
+function woofer(c, x, y, r) {
+  c.fillStyle = '#1b2230'; disc(c, x, y, r);
+  c.fillStyle = '#0c0f15'; disc(c, x, y, r - 2);
+  c.fillStyle = '#2b3445'; disc(c, x, y, Math.max(1, r >> 2));
+}
+
+function buildFront(c) {
+  const { stageY, bt, cx } = G;
+  c.clearRect(0, 0, W, H);
+
+  /* stage deck with an LED lip channel */
+  c.fillStyle = '#111925'; c.fillRect(0, stageY - 8, W, 8);
+  c.fillStyle = '#2a3a52'; c.fillRect(0, stageY - 8, W, 1);
+  c.fillStyle = '#0b1019'; c.fillRect(0, stageY - 3, W, 1);
+  c.fillStyle = '#06080c'; c.fillRect(0, stageY - 1, W, 1);
+
+  /* speaker stacks */
+  for (const st of G.stacks) {
+    c.fillStyle = '#161d29'; c.fillRect(st.x0, st.topY, 36, 48);
+    c.fillStyle = '#2a3342'; c.fillRect(st.x0, st.topY, 36, 1); c.fillRect(st.x0, st.subY, 36, 1);
+    c.fillStyle = '#0b0f16'; c.fillRect(st.x0, st.subY - 1, 36, 1); c.fillRect(st.x0 + 35, st.topY, 1, 48);
+    c.fillStyle = '#0a0d13'; c.fillRect(st.x0 + 6, st.topY + 3, 24, 6);
+    c.fillStyle = '#222b3b'; c.fillRect(st.x0 + 10, st.topY + 5, 16, 2);
+    woofer(c, st.x0 + 18, st.topY + 15, 5);
+    woofer(c, st.x0 + 18, st.subY + 13, 10);
+  }
+
+  /* booth front panel */
+  const bx = cx - 60, panelH = stageY - 8 - (bt + 14);
+  c.fillStyle = '#121a26'; c.fillRect(bx, bt + 14, 120, panelH);
+  c.fillStyle = '#0d131c'; c.fillRect(bx + 20, bt + 15, 1, panelH - 1); c.fillRect(bx + 100, bt + 15, 1, panelH - 1);
+  c.fillStyle = '#0b1019'; c.fillRect(bx, bt + 14, 1, panelH); c.fillRect(bx + 119, bt + 14, 1, panelH);
+  c.fillStyle = '#1d2838'; c.fillRect(bx, bt + 14, 120, 1);
+  c.fillStyle = '#07090d'; c.fillRect(bx + 4, bt + 17, 112, 1);
+  c.globalAlpha = 0.5;
+  c.drawImage(boothTextCv, cx - (boothTextCv.width >> 1), bt + 21);
+  c.globalAlpha = 1;
+
+  /* booth top surface */
+  c.fillStyle = '#1c2635'; c.fillRect(bx - 2, bt, 124, 14);
+  c.fillStyle = '#34445c'; c.fillRect(bx - 2, bt, 124, 1);
+  c.fillStyle = '#0b0f16'; c.fillRect(bx - 2, bt + 13, 124, 1);
+
+  /* turntables */
+  for (const dk of [G.deckL, G.deckR]) {
+    const x = dk.x, y = bt + 7, px = x - 3;
+    c.fillStyle = '#2c3544'; c.fillRect(x - 19, bt + 1, 38, 12);
+    c.fillStyle = '#3e4a5e'; c.fillRect(x - 19, bt + 1, 38, 1);
+    c.fillStyle = '#161c26'; c.fillRect(x - 19, bt + 12, 38, 1);
+    c.fillStyle = '#07090d'; ell(c, px, y, 15, 5);
+    c.fillStyle = '#141a24'; ell(c, px, y, 11, 4);
+    c.fillStyle = '#07090d'; ell(c, px, y, 10, 3);
+    c.fillStyle = dk.lab; ell(c, px, y, 4, 1);
+    c.fillStyle = '#cdd6cd'; c.fillRect(px, y, 1, 1);
+    c.fillStyle = '#56657d'; c.fillRect(x + 14, bt + 2, 3, 3);
+    c.fillStyle = '#aab6c8'; line(c, x + 15, bt + 3, x + 6, y + 2, 1);
+    c.fillStyle = '#cdd6cd'; c.fillRect(x + 5, y + 2, 2, 2);
+    c.fillStyle = '#07090d'; c.fillRect(x + 16, bt + 7, 1, 5);
+  }
+
+  /* mixer: raised meter hood + body */
+  c.fillStyle = '#34445c'; c.fillRect(cx - 12, bt - 12, 24, 13);
+  c.fillStyle = '#1a2230'; c.fillRect(cx - 11, bt - 11, 22, 12);
+  for (let k = 0; k < 8; k++) {
+    c.fillStyle = k < 5 ? '#123018' : k < 7 ? '#3a2a10' : '#3a1838';
+    c.fillRect(cx - 6, bt - 2 - k, 2, 1);
+    c.fillRect(cx + 4, bt - 2 - k, 2, 1);
+  }
+  c.fillStyle = '#6b7a90';
+  c.fillRect(cx - 1, bt - 9, 2, 1); c.fillRect(cx - 1, bt - 6, 2, 1); c.fillRect(cx - 1, bt - 3, 2, 1);
+  c.fillStyle = '#242e3d'; c.fillRect(cx - 12, bt + 1, 24, 12);
+  c.fillStyle = '#3a4758'; c.fillRect(cx - 12, bt + 1, 24, 1);
+  c.fillStyle = '#07090d';
+  c.fillRect(cx - 7, bt + 3, 1, 7); c.fillRect(cx + 6, bt + 3, 1, 7); c.fillRect(cx - 5, bt + 11, 11, 1);
+  c.fillStyle = '#6b7a90';
+  for (let k = 0; k < 3; k++) {
+    c.fillRect(cx - 10, bt + 3 + k * 3, 1, 1); c.fillRect(cx + 9, bt + 3 + k * 3, 1, 1);
+    c.fillRect(cx - 3, bt + 3 + k * 3, 1, 1); c.fillRect(cx + 2, bt + 3 + k * 3, 1, 1);
+  }
+}
+
+function buildBall(r) {
+  const bs = r * 2 + 1;
+  const [cvs, c] = mk(bs * 8, bs);
+  const tones = ['#2a3342', '#56657d', '#8d9bb0', '#c9d4e2'];
+  const rr = (r + 0.5) * (r + 0.5);
+  for (let f = 0; f < 8; f++) for (let dy = -r; dy <= r; dy++) {
+    const rowR = Math.sqrt(Math.max(0.25, rr - dy * dy));
+    for (let dx = -r; dx <= r; dx++) {
+      if (dx * dx + dy * dy > rr) continue;
+      const lon = Math.asin(clamp(dx / rowR, -1, 1));
+      const fi = Math.floor((lon / Math.PI + 0.5) * 7 + f / 8);
+      const fj = Math.floor((dy + r) / 2);
+      let ti = clamp(Math.floor(hash2(fi * 3 + 11, fj * 7 + 5) * 3.2 + (-dx - dy) / (r * 2) * 1.2), 0, 3);
+      if (hash2(fi * 5 + f, fj * 13 + 1) > 0.93) ti = 3;
+      c.fillStyle = tones[ti];
+      c.fillRect(f * bs + dx + r, dy + r, 1, 1);
+    }
+  }
+  return cvs;
+}
+
+/* ---------- simulation ---------- */
+function pan(mode, i, u) {
+  const m = moveT;
+  switch (mode) {
+    case 0: return 0.5 * Math.sin(m * Math.PI / 4);                          // all sweep together
+    case 1: return u * 0.5 * (0.55 + 0.45 * Math.sin(m * Math.PI / 8));      // breathing fan
+    case 2: return ((i & 1) ? 1 : -1) * 0.5 * Math.sin(m * Math.PI / 4);     // criss-cross
+    default: return 0.45 * Math.sin(m * Math.PI / 4 + i * 0.9);              // wave
+  }
+}
+
+function update(dt) {
+  simT += dt;
+  beat += dt * BPS * (RM ? 0.25 : 1);
+  bar = Math.floor(beat / 4);
+  phrase = Math.floor(bar / 8) % 4;           // 32-bar cycle: main, lasers, main, breakdown+build
+  bip = bar % 8;
+  breakdown = !RM && phrase === 3 && bip < 4;
+  buildUp = !RM && phrase === 3 && bip >= 4;
+  kick = (RM || breakdown) ? 0 : 1;
+  pulse = kick * Math.exp(-frac(beat) * 6);
+  if (RM) energyNow = 0;
+  else if (breakdown) energyNow = 0.35;
+  else if (buildUp) energyNow = 0.45 + 0.55 * clamp((beat - (bar - bip + 4) * 4) / 16, 0, 1);
+  else energyNow = 1;
+  crowdK = (!RM && phrase === 0 && bip === 0) ? energyNow * 1.4 : energyNow;   // the drop
+  lasersOn = !RM && phrase === 1;
+
+  moveT += dt * BPS * (RM ? 0.08 : breakdown ? 0.4 : 1);
+  plasmaT += dt * (RM ? 0.25 : breakdown ? 0.6 : 1.2);
+  rot += dt * (RM ? 0 : breakdown ? 0.03 : 0.018);
+  if (rot > 1000) rot -= 1000;
+  tickPos += dt * (RM ? 3 : 9);
+  if (tickPos > TICK.length * 1000) tickPos -= TICK.length * 1000;
+  hazeOff = (hazeOff + dt * (RM ? 1.5 : 4)) % G.HW;
+  fogOff0 = (fogOff0 + dt * (RM ? 1.2 : 4)) % G.FW;
+  fogOff1 = ((fogOff1 - dt * (RM ? 1.8 : 6)) % G.FW + G.FW) % G.FW;
+
+  /* moving heads: 4-bar movement blocks, 2-beat crossfade between them; colour cuts on every bar */
+  const n = G.nFix, blk = Math.floor(bar / 4);
+  const mode = blk % 4, pmode = (blk + 3) % 4;
+  const k = smooth(clamp((beat - blk * 16) / 2, 0, 1));
+  const sch = bar % 4, base = Math.floor(bar / 4);
+  for (let i = 0; i < n; i++) {
+    const u = n > 1 ? (i - (n - 1) / 2) / ((n - 1) / 2) : 0;
+    let ci;
+    if (RM) {
+      fixTheta[i] = u * 0.3 + 0.08 * Math.sin(simT * 0.12 + i * 1.7);
+      ci = i % 5;
+    } else {
+      fixTheta[i] = lerp(pan(pmode, i, u), pan(mode, i, u), k);
+      ci = sch === 0 ? base % 5
+        : sch === 1 ? ((i & 1) ? base + 1 : base) % 5
+        : sch === 2 ? (i + bar) % 5
+        : (Math.abs(u) > 0.5 ? base + 2 : base) % 5;
+    }
+    fixCss[i] = PAL_CSS[ci];
+    beamTY[i] = G.stageY + G.A * (0.45 + 0.25 * Math.sin(moveT * Math.PI / 8 + i * 1.3));
+  }
+  beamI = RM ? 0.7 : (0.72 + 0.28 * pulse) * (0.45 + 0.55 * energyNow);
+
+  /* LED equaliser */
+  const bi = Math.floor(beat);
+  for (let b = 0; b < eq.length; b++) {
+    const target = RM ? 0.3 : (0.18 + 0.82 * hash2(b, bi)) * (0.4 + 0.6 * pulse) * (0.5 + 0.5 * energyNow);
+    eq[b] += (target - eq[b]) * Math.min(1, dt * 10);
+  }
+
+  /* mixer VU */
+  if (RM) { vuL = vuR = 0.45 + 0.1 * Math.sin(simT * 0.4); }
+  else {
+    vuL = clamp(0.2 + 0.55 * pulse + 0.25 * energyNow + 0.08 * Math.sin(simT * 9.1), 0, 1);
+    vuR = clamp(0.18 + 0.55 * pulse + 0.25 * energyNow + 0.08 * Math.sin(simT * 7.3 + 1), 0, 1);
+  }
+}
+
+/* ---------- drawing ---------- */
+function drawStars(c) {
+  let cur = -1;
+  for (let k = 0; k < stars.length; k++) {
+    const s = stars[k];
+    if (s.c !== cur) { cur = s.c; c.fillStyle = STAR_CSS[cur]; }
+    c.globalAlpha = RM ? s.a * 0.8 : s.a * (0.55 + 0.45 * Math.sin(simT * s.sp + s.ph));
+    c.fillRect(s.x, s.y, 1, 1);
+  }
+  c.globalAlpha = 1;
+}
+
+function fillLED() {
+  const d = ledImg.data, cols = G.cols, rows = G.rows, mask = G.mask;
+  const pat = (RM || breakdown) ? 3 : Math.floor(bar / 4) % 3;
+  const bi = Math.floor(beat);
+  const logoK = RM ? 0.95 : 0.85 + 0.15 * pulse;
+  const tr = G.tickRow, tOff = Math.floor(tickPos), tl = TICK.length;
+
+  if (pat === 0) {
+    const c1 = frac(beat * 0.25), c2 = frac(beat * 0.25 + 0.5), cc = frac(beat * 0.125);
+    for (let j = 0; j < rows; j++) {
+      const y = j / rows;
+      let a = Math.abs(y - c1); a = Math.min(a, 1 - a);
+      let b = Math.abs(y - c2); b = Math.min(b, 1 - b);
+      const v1 = Math.max(0, 1 - a * rows / 3), v2 = Math.max(0, 1 - b * rows / 3);
+      rowV[j] = Math.max(v1, v2); rowH[j] = v1 >= v2 ? 0 : 1;
+    }
+    for (let i = 0; i < cols; i++) {
+      let a = Math.abs(i / cols - cc); a = Math.min(a, 1 - a);
+      colV[i] = Math.max(0, 1 - a * cols / 2.5) * 0.8;
+    }
+  } else if (pat === 3) {
+    for (let j = 0; j < rows; j++) rowS[j] = Math.sin(j * 0.33 - plasmaT * 0.8);
+    for (let i = 0; i < cols; i++) colS[i] = Math.sin(i * 0.21 + plasmaT);
+  }
+
+  let k = 0;
+  for (let j = 0; j < rows; j++) {
+    const inBand = tr >= 0 && j >= tr - 1 && j <= tr + 5;
+    const inText = tr >= 0 && j >= tr && j < tr + 5;
+    for (let i = 0; i < cols; i++, k++) {
+      let r, g, b;
+      const m = mask[k];
+      if (m === 1) { r = 123 * logoK; g = 240 * logoK; b = 106 * logoK; }
+      else if (m === 2) { r = 10; g = 34; b = 8; }
+      else if (inText && i >= 1 && i < cols - 1 && ((TICK[(i + tOff) % tl] >> (j - tr)) & 1)) { r = 255; g = 181; b = 61; }
+      else {
+        let v, hh;
+        if (pat === 0) {
+          if (rowV[j] >= colV[i]) { v = rowV[j]; hh = rowH[j]; } else { v = colV[i]; hh = 0; }
+          v = 0.05 + v * 0.95;
+        } else if (pat === 1) {
+          const hgt = rows - 1 - j;
+          if (i % 3 !== 2 && hgt < eq[(i / 3) | 0] * rows) { v = 0.9; hh = hgt / rows; } else { v = 0.03; hh = 0; }
+        } else if (pat === 2) {
+          const on = ((i >> 2) + (j >> 2) + bi) & 1;
+          v = on ? 0.3 + 0.5 * pulse : 0.05; hh = bar & 1;
+        } else {
+          const s = colS[i] + rowS[j] + Math.sin((i + j) * 0.18 + plasmaT * 0.7);
+          v = 0.12 + 0.3 * (s / 6 + 0.5); hh = 0.5 + 0.5 * Math.sin(s * 1.3 + plasmaT * 0.3);
+        }
+        if (inBand) v *= 0.3;
+        const q = v * 0.72;
+        r = 14 + (42 + 188 * hh) * q;
+        g = 20 + (178 - 90 * hh) * q;
+        b = 30 + (215 - hh) * q;
+      }
+      const p = k << 2;
+      d[p] = r; d[p + 1] = g; d[p + 2] = b; d[p + 3] = 255;
+    }
+  }
+}
+
+function drawLED(c) {
+  fillLED();
+  ledCtx.putImageData(ledImg, 0, 0);
+  const lw = G.cols * 3, lh = G.rows * 3;
+  c.drawImage(ledCv, 0, 0, G.cols, G.rows, G.wx0, G.wy0, lw, lh);
+  c.drawImage(gridCv, G.wx0, G.wy0);
+  c.imageSmoothingEnabled = true;
+  c.globalCompositeOperation = 'lighter';
+  c.globalAlpha = RM ? 0.4 : 0.36 + 0.14 * pulse;
+  c.drawImage(glowCv, G.wx0 - GLOW_PAD * 3, G.wy0 - GLOW_PAD * 3, (G.cols + GLOW_PAD * 2) * 3, (G.rows + GLOW_PAD * 2) * 3);
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = 'source-over';
+  c.imageSmoothingEnabled = false;
+}
+
+function drawDJ(c) {
+  const x = G.cx;
+  const nod = (!RM && kick && frac(beat) < 0.3) ? 1 : 0;
+  const top = G.djTop + nod, ty = G.djTop + 12;
+  /* torso (backlit by the wall) */
+  c.fillStyle = '#1e2a3c'; c.fillRect(x - 8, ty, 16, 1); c.fillRect(x - 9, ty + 1, 18, G.bt - ty - 1);
+  c.fillStyle = '#3e7a36'; c.fillRect(x - 8, ty, 16, 1);
+  c.fillStyle = '#7d5640'; c.fillRect(x - 2, top + 10, 4, ty - top - 10);
+  /* head, shades, headphones */
+  c.fillStyle = '#1a1410'; c.fillRect(x - 4, top, 8, 1); c.fillRect(x - 5, top + 1, 10, 2);
+  c.fillStyle = '#a8765a'; c.fillRect(x - 5, top + 3, 10, 6); c.fillRect(x - 4, top + 9, 8, 1);
+  c.fillStyle = '#07090d'; c.fillRect(x - 4, top + 4, 8, 2);
+  c.fillStyle = '#38c6f5'; c.fillRect(x - 3, top + 4, 1, 1); c.fillRect(x + 2, top + 4, 1, 1);
+  c.fillStyle = '#6e4331'; c.fillRect(x - 1, top + 7, 3, 1);
+  c.fillStyle = '#2b3445'; c.fillRect(x - 5, top - 1, 10, 1); c.fillRect(x - 6, top, 1, 3); c.fillRect(x + 5, top, 1, 3);
+  c.fillStyle = '#1c2230'; c.fillRect(x - 7, top + 3, 3, 5); c.fillRect(x + 4, top + 3, 3, 5);
+  c.fillStyle = '#38c6f5'; c.fillRect(x - 7, top + 4, 1, 3); c.fillRect(x + 6, top + 4, 1, 3);
+}
+
+function faderY(ph) { return G.bt + 3 + Math.round(2.5 + 2.5 * Math.sin(moveT * Math.PI / 16 + ph)); }
+
+function drawBoothDyn(c) {
+  const { cx, bt, stageY } = G;
+  /* platters: 33 1/3 rpm marker + label dot */
+  const spin = simT * (RM ? 1.2 : 3.49);
+  const scratch = !RM && phrase === 2 && (bip === 3 || bip === 7);
+  for (let n = 0; n < 2; n++) {
+    const dk = n ? G.deckR : G.deckL;
+    const px = dk.x - 3, y = bt + 7;
+    const a = spin + n * 2.1 + (scratch && !n ? Math.sin(simT * 13) * 0.9 : 0);
+    const ca = Math.cos(a), sa = Math.sin(a);
+    c.fillStyle = '#cdd6cd'; c.fillRect(px + Math.round(ca * 12), y + Math.round(sa * 4), 2, 1);
+    c.fillStyle = '#07090d'; c.fillRect(px + Math.round(ca * 3), y + Math.round(sa), 1, 1);
+  }
+  /* faders */
+  c.fillStyle = '#cdd6cd';
+  c.fillRect(cx - 8, faderY(0), 3, 2);
+  c.fillRect(cx + 5, faderY(2), 3, 2);
+  c.fillRect(cx - 5 + Math.round(4.5 + 4.5 * Math.sin(moveT * Math.PI / 32)), bt + 10, 2, 3);
+  /* VU meters */
+  const nl = Math.round(vuL * 8), nr = Math.round(vuR * 8);
+  for (let k = 0; k < 8; k++) {
+    c.fillStyle = k < 5 ? '#7bf06a' : k < 7 ? '#ffb53d' : '#f46cf4';
+    if (k < nl) c.fillRect(cx - 6, bt - 2 - k, 2, 1);
+    if (k < nr) c.fillRect(cx + 4, bt - 2 - k, 2, 1);
+  }
+  /* LED chase strips: booth (green) and stage lip (beam colour) */
+  const ph = RM ? simT * 0.8 : beat * Math.PI;
+  c.fillStyle = '#7bf06a';
+  for (let x = cx - 56; x < cx + 56; x += 2) {
+    c.globalAlpha = 0.2 + 0.8 * Math.max(0, Math.sin(x * 0.35 - ph));
+    c.fillRect(x, bt + 17, 1, 1);
+  }
+  c.fillStyle = fixCss[0];
+  for (let x = 0; x < W; x += 2) {
+    c.globalAlpha = 0.15 + 0.6 * Math.max(0, Math.sin(x * 0.15 + ph));
+    c.fillRect(x, stageY - 3, 1, 1);
+  }
+  /* booth badge lifts on the kick */
+  if (pulse > 0.02) {
+    c.globalCompositeOperation = 'lighter';
+    c.globalAlpha = 0.4 * pulse;
+    c.drawImage(boothTextCv, cx - (boothTextCv.width >> 1), bt + 21);
+    c.globalCompositeOperation = 'source-over';
+  }
+  c.globalAlpha = 1;
+  /* woofers punch on the beat */
+  if (!RM && pulse > 0.35) {
+    for (const w of G.woofers) {
+      c.fillStyle = '#222b3b'; disc(c, w.x, w.y, w.r + 1);
+      c.fillStyle = '#0e1219'; disc(c, w.x, w.y, w.r - 1);
+      c.fillStyle = '#56657d'; disc(c, w.x, w.y, (w.r >> 2) + 1);
+    }
+  }
+}
+
+function drawDJArms(c) {
+  const x = G.cx, shY = G.djTop + 14, bt = G.bt;
+  const scratch = !RM && phrase === 2 && (bip === 3 || bip === 7);
+  const raised = !RM && ((bip >= 6 && phrase !== 3) || (buildUp && bip >= 6));
+  /* left hand rides the left platter */
+  const lhx = x - 27 + (scratch ? Math.round(Math.sin(simT * 13) * 2) : 0), lhy = bt + 4;
+  c.fillStyle = '#1e2a3c'; c.fillRect(x - 11, shY - 1, 4, 5);
+  c.fillStyle = '#8d6048'; line(c, x - 10, shY + 3, lhx + 1, lhy - 1, 2);
+  c.fillStyle = '#b07f60'; c.fillRect(lhx - 1, lhy - 1, 3, 3);
+  /* right hand: on the channel fader, or up in the air */
+  let rhx, rhy;
+  if (raised) { rhx = x + 15; rhy = G.djTop - 8 - (pulse > 0.4 ? 2 : 0); }
+  else { rhx = x + 6; rhy = faderY(2) + 1; }
+  c.fillStyle = '#1e2a3c'; c.fillRect(x + 7, shY - 1, 4, 5);
+  c.fillStyle = '#8d6048'; line(c, x + 9, shY + 3, rhx, rhy + 1, 2);
+  c.fillStyle = '#b07f60'; c.fillRect(rhx - 1, rhy - 1, 3, 3);
+}
+
+function drawFixtures(c) {
+  const ty = G.trussY;
+  for (let i = 0; i < G.nFix; i++) {
+    const fx = G.fx[i], th = fixTheta[i];
+    c.fillStyle = '#0b0f16'; c.fillRect(fx - 1, ty + 5, 3, 2);
+    c.fillStyle = '#3a4556'; c.fillRect(fx - 4, ty + 7, 9, 1); c.fillRect(fx - 4, ty + 7, 1, 6); c.fillRect(fx + 4, ty + 7, 1, 6);
+    c.fillStyle = '#232c3a'; c.fillRect(fx - 3, ty + 9, 7, 6);
+    c.fillStyle = '#56657d'; c.fillRect(fx - 3, ty + 9, 7, 1);
+    const lx = fx - 1 + Math.round(Math.sin(th) * 2), ly = ty + 13;
+    c.fillStyle = fixCss[i]; c.fillRect(lx, ly, 3, 2);
+    c.fillStyle = '#ffffff'; c.globalAlpha = 0.8; c.fillRect(lx + 1, ly, 1, 1); c.globalAlpha = 1;
+    fixOX[i] = lx + 1.5; fixOY[i] = ly + 2;
+  }
+  /* laser unit */
+  c.fillStyle = '#232c3a'; c.fillRect(G.laserX - 3, ty + 6, 7, 4);
+  c.fillStyle = lasersOn ? '#7bf06a' : '#1f3a1c'; c.fillRect(G.laserX, ty + 9, 1, 1);
+  /* mirror ball */
+  const r = G.ballR, bs = r * 2 + 1;
+  c.fillStyle = '#3a4556'; c.fillRect(G.ballX, ty + 6, 1, Math.max(0, G.ballY - r - ty - 6));
+  const fr = Math.floor(rot * 480) & 7;
+  c.drawImage(ballCv, fr * bs, 0, bs, bs, G.ballX - r, G.ballY - r, bs, bs);
+}
+
+function drawLasers(b) {
+  const ox = G.laserX, oy = G.trussY + 10, n = 6;
+  const spread = 0.17 + 0.06 * Math.sin(beat * Math.PI / 8);
+  const base = 0.35 * Math.sin(beat * Math.PI / 16);
+  b.fillStyle = (Math.floor(bar / 2) & 1) ? '#54f3f3' : '#7bf06a';
+  b.globalAlpha = 0.9;
+  for (let k = 0; k < n; k++) {
+    const a = base + (k - (n - 1) / 2) * spread;
+    const dx = Math.sin(a), dy = Math.cos(a);
+    let t = (H - oy) / Math.max(0.05, dy);
+    if (dx > 0.001) t = Math.min(t, (W - 1 - ox) / dx);
+    else if (dx < -0.001) t = Math.min(t, ox / -dx);
+    line(b, ox, oy, ox + dx * t, oy + dy * t, 1);
+  }
+  b.globalAlpha = 1;
+}
+
+function drawBeams(c) {
+  const b = beamCtx;
+  b.globalCompositeOperation = 'source-over';
+  b.globalAlpha = 1;
+  b.clearRect(0, 0, W, H);
+  b.globalCompositeOperation = 'lighter';
+  const N = 9, sp = G.spread;
+  for (let i = 0; i < G.nFix; i++) {
+    const th = fixTheta[i], dx = Math.sin(th), dy = Math.cos(th);
+    const ox = fixOX[i], oy = fixOY[i];
+    const L = Math.max(10, (beamTY[i] - oy) / dy);
+    b.fillStyle = fixCss[i];
+    for (let s = 0; s < N; s++) {
+      const d0 = L * s / N, d1 = L * (s + 1) / N;
+      const w0 = 0.8 + d0 * sp, w1 = 0.8 + d1 * sp;
+      b.globalAlpha = beamI * 0.24 * (1 - 0.7 * s / N);
+      quad(b, ox, oy, dx, dy, dy, -dx, d0, d1, w0, w1);
+      b.globalAlpha = beamI * 0.26 * (1 - 0.85 * s / N);
+      quad(b, ox, oy, dx, dy, dy, -dx, d0, d1, w0 * 0.35, w1 * 0.35);
+    }
+    beamEX[i] = ox + dx * L; beamEY[i] = oy + dy * L; beamEW[i] = 0.8 + L * sp;
+  }
+  if (lasersOn) drawLasers(b);
+  /* beams only show where the haze is */
+  b.globalCompositeOperation = 'destination-in';
+  b.globalAlpha = 1;
+  b.drawImage(hazeCv, -Math.floor(hazeOff), 0);
+  b.globalCompositeOperation = 'source-over';
+
+  c.globalCompositeOperation = 'lighter';
+  c.drawImage(beamCv, 0, 0);
+  /* pools where the beams hit the floor */
+  for (let i = 0; i < G.nFix; i++) {
+    if (beamEY[i] < G.stageY - 2) continue;
+    c.fillStyle = fixCss[i];
+    c.globalAlpha = 0.16 * beamI;
+    c.beginPath();
+    c.ellipse(Math.round(beamEX[i]), Math.round(beamEY[i]), beamEW[i] * 1.3, Math.max(2, beamEW[i] * 0.28), 0, 0, TAU);
+    c.fill();
+  }
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = 'source-over';
+}
+
+function drawSpecks(c) {
+  const k = RM ? 0.25 : breakdown ? 0.9 : buildUp ? 0.6 : 0.35;
+  const span = W + 20;
+  c.globalCompositeOperation = 'lighter';
+  c.fillStyle = '#dcecff';
+  for (let n = 0; n < specks.length; n++) {
+    const s = specks[n];
+    c.globalAlpha = k * s.a * (RM ? 1 : 0.6 + 0.4 * Math.sin(simT * 2.5 + s.ph));
+    c.fillRect(Math.floor(frac(s.u + rot) * span) - 10, s.y, s.w, 1);
+  }
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = 'source-over';
+}
+
+function drawFog(c, row) {
+  const off = Math.floor(row === 0 ? fogOff0 : fogOff1);
+  c.globalAlpha = row === 0 ? 0.16 : 0.15;
+  c.drawImage(fogCv, -off, row === 0 ? G.fogY0 : G.fogY1);
+  c.globalAlpha = 1;
+}
+
+let nHands = 0;
+function arm(c, d, x0, y0, x1, y1) {
+  line(c, x0, y0, x1, y1, d.aw);
+  const hs = d.aw + 1;
+  c.fillRect(x1 - (hs >> 1), y1 - (hs >> 1), hs, hs);
+  if (nHands < 2) { handX[nHands] = x1; handY[nHands] = y1; handSX[nHands] = x0; handSY[nHands] = y0; nHands++; }
+}
+
+function drawDancer(c, d) {
+  const h = d.h;
+  let by, sway = 0, wave = 0, e = 1;
+  if (RM) {
+    by = Math.round(0.5 + 0.5 * Math.sin(simT * 0.6 + d.phase * TAU));
+  } else {
+    const ph = (d.half ? beat * 0.5 : beat) + d.phase * 0.35;
+    by = Math.round(d.amp * crowdK * (0.5 + 0.5 * Math.cos(ph * TAU)));
+    sway = d.swayAmp ? Math.round(Math.sin(beat * Math.PI / 2 + d.swayPh) * d.swayAmp) : 0;
+    wave = Math.sin(beat * Math.PI / 2 + d.swayPh);
+    e = Math.exp(-frac(beat + d.phase * 0.2) * 5);
+  }
+  const x = d.x + sway, top = d.top + by;
+  const hx = x - (d.hw >> 1), shY = top + d.hh + d.neck, sx = x - (d.sw >> 1);
+
+  c.fillStyle = d.col;
+  c.fillRect(hx + 1, top, d.hw - 2, 1);
+  c.fillRect(hx, top + 1, d.hw, d.hh - 1);
+  c.fillRect(x - (d.nw >> 1), top + d.hh, d.nw, d.neck);
+  /* shoulders + upper arms, then a narrower waist so the silhouette reads as a person */
+  const armH = Math.max(3, Math.round(h * 0.42)), ti = Math.max(1, d.aw);
+  c.fillRect(sx + 1, shY, d.sw - 2, 1);
+  c.fillRect(sx, shY + 1, d.sw, armH);
+  c.fillRect(sx + ti, shY + 1 + armH, d.sw - ti * 2, H - shY);
+  if (d.hair === 1) c.fillRect(d.side > 0 ? hx + d.hw : hx - 1, top + 2, 1, Math.max(2, d.hh - 1));
+  else if (d.hair === 2) c.fillRect(x - 1, top - 1, 3, 1);
+  else if (d.hair === 3) { c.fillRect(hx, top, 1, 1); c.fillRect(hx + d.hw - 1, top, 1, 1); }
+
+  let pose = d.pose;
+  if (buildUp && pose === 0 && d.lift < 0.55) pose = 1;
+  nHands = 0;
+  const lsx = sx + (d.aw >> 1), rsx = sx + d.sw - 1 - (d.aw >> 1), sy0 = shY + 1;
+  const up = Math.round(h * 0.32), out = Math.max(1, Math.round(h * 0.1));
+  if (pose === 1) {
+    const wx = RM ? 0 : Math.round(wave * h * 0.1);
+    arm(c, d, lsx, sy0, lsx - out + wx, top - up);
+    arm(c, d, rsx, sy0, rsx + out + wx, top - up);
+  } else if (pose === 2) {
+    const hy = RM ? top - up : top + Math.round(h * 0.05) - Math.round((up + h * 0.05) * e);
+    if (d.side < 0) arm(c, d, lsx, sy0, lsx - out, hy); else arm(c, d, rsx, sy0, rsx + out, hy);
+  } else if (pose === 3) {
+    if (d.side < 0) arm(c, d, lsx, sy0, lsx - out - 1, top - up + 2); else arm(c, d, rsx, sy0, rsx + out + 1, top - up + 2);
+  }
+
+  /* rim light in the colour of the nearest beam */
+  let bi = 0, bd = 1e9;
+  for (let i = 0; i < G.nFix; i++) { const dd = Math.abs(beamEX[i] - x); if (dd < bd) { bd = dd; bi = i; } }
+  c.fillStyle = fixCss[bi];
+  c.globalAlpha = d.rim * Math.max(0.25, 1 - bd / 60) * (RM ? 0.7 : 0.6 + 0.4 * pulse);
+  c.fillRect(hx + 1, top, d.hw - 2, 1);
+  c.fillRect(sx + 1, shY, d.sw - 2, 1);
+  const left = beamEX[bi] < x;
+  c.fillRect(left ? hx : hx + d.hw - 1, top + 1, 1, Math.max(1, d.hh - 2));
+  c.fillRect(left ? sx : sx + d.sw - 1, shY + 1, 1, Math.min(armH, Math.max(1, H - shY - 1)));
+  const hs = d.aw + 1;
+  for (let n = 0; n < nHands; n++) c.fillRect(handX[n] - (hs >> 1), handY[n] - (hs >> 1), hs, 1);
+  c.globalAlpha = 1;
+
+  /* glowstick in the first raised hand */
+  if (d.stick && nHands) {
+    const vx = handX[0] - handSX[0], vy = handY[0] - handSY[0];
+    const len = Math.max(1, Math.hypot(vx, vy));
+    const ls = Math.max(3, Math.round(h * 0.16));
+    const tx = Math.round(handX[0] + vx / len * ls), tyy = Math.round(handY[0] + vy / len * ls);
+    c.fillStyle = d.stick;
+    c.globalAlpha = 0.28;
+    c.fillRect(Math.min(handX[0], tx) - 1, Math.min(handY[0], tyy) - 1, Math.abs(tx - handX[0]) + 3, Math.abs(tyy - handY[0]) + 3);
+    c.globalAlpha = 1;
+    line(c, handX[0], handY[0], tx, tyy, h >= 44 ? 2 : 1);
+  }
+}
+
+function drawCrowd(c) {
+  let row = 0;
+  for (let k = 0; k < dancers.length; k++) {
+    const d = dancers[k];
+    if (d.row !== row) { drawFog(c, row); row = d.row; }
+    drawDancer(c, d);
+  }
+}
+
+function render() {
+  const c = bctx;
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = 'source-over';
+  c.drawImage(backCv, 0, 0);
+  drawStars(c);
+  drawLED(c);
+  drawDJ(c);
+  c.drawImage(frontCv, 0, 0);
+  drawBoothDyn(c);
+  drawDJArms(c);
+  drawFixtures(c);
+  drawBeams(c);
+  drawSpecks(c);
+  /* faint drifting haze veil over the room */
+  c.globalAlpha = RM ? 0.035 : 0.045;
+  c.drawImage(hazeCv, -Math.floor((hazeOff * 1.7) % G.HW), 0);
+  c.globalAlpha = 1;
+  drawCrowd(c);
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(buf, 0, 0, W, H, OX, OY, W * S, H * S);
+}
+
+/* ---------- loop: rAF, paused while hidden, 15 fps under reduced motion ---------- */
+function frame(ts) {
+  if (!running) return;
+  raf = requestAnimationFrame(frame);
+  /* also catch size/zoom changes that arrive without a resize event (e.g. loaded in a hidden tab) */
+  if (!dirty && G && (viewW() !== G.vw || viewH() !== G.vh || viewDpr() !== G.dpr)) { dirty = true; resizeAt = ts; }
+  let fresh = false;
+  if (dirty && (!G || ts - resizeAt > 120)) { layout(); dirty = false; fresh = true; }
+  let dt = lastTs ? (ts - lastTs) / 1000 : 1 / 60;
+  lastTs = ts;
+  if (!(dt > 0)) dt = 0;
+  if (dt > 0.1) dt = 0.1;
+  acc += dt;
+  if (RM && acc < 1 / 15 && !fresh) return;   // resizing clears the canvas: always repaint right away
+  dt = Math.min(acc, 0.1); acc = 0;
+  update(dt);
+  render();
+}
+function start() {
+  if (running) return;
+  running = true; lastTs = 0; acc = 0;
+  raf = requestAnimationFrame(frame);
+}
+function stop() {
+  running = false;
+  if (raf) cancelAnimationFrame(raf);
+  raf = 0;
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+window.addEventListener('resize', () => { dirty = true; resizeAt = performance.now(); });
+if (!document.hidden) start();
 })();
 </script>
 </body>
