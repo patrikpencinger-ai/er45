@@ -42,8 +42,9 @@
   Hints: console teaser; the yellow sticky note on the desk ("don't feed the cat · ↑↑↓↓←→←→BA").
   Desktop: moving the mouse racks the focus band to the pointer (touch: tap empty desk).
 -->
+<meta name="er45-cover" content="diorama" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<meta name="description" content="ER45 — 1:87 scale: a miniature model nightclub on a modeller's desk, photographed tilt-shift. Twin turntables, moving heads, fog, go-go podiums and a queue at the door. Cover proposal 03/04." />
+<meta name="description" content="ER45 — 1:87 scale: a miniature model nightclub on a modeller's desk, photographed tilt-shift. Twin turntables, moving heads, fog, go-go podiums and a queue at the door." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -52,20 +53,38 @@
   html,body{margin:0;height:100%;background:#140e0b;color:#f3ead8;font-family:"Courier New",ui-monospace,monospace;overflow:hidden}
   #scene{position:fixed;inset:0;width:100%;height:100%;display:block;background:#140e0b;touch-action:none;z-index:0;cursor:crosshair}
 
-  /* top-right pixel links (copied from index.html; colours restyled for the desk palette) */
-  .corner{position:fixed;top:14px;right:14px;z-index:10;display:flex;gap:10px}
-  .plink{font-family:'Press Start 2P',ui-monospace,monospace;font-size:10px;line-height:1;letter-spacing:.04em;
-    color:var(--c,#e9eef0);text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;
-    background:rgba(8,12,20,.55);padding:.85em .95em;border-radius:4px;
-    text-shadow:0 0 8px currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.25);
-    transition:transform .1s, filter .15s}
-  .plink:hover{filter:brightness(1.25)}
-  .plink:active{transform:translateY(2px);border-bottom-width:2px}
-  .plink.covers{--c:#ffcf6e}
-  .plink.archive{--c:#38c6f5}
-  .plink.dynamic{--c:#f46cf4}
-  .plink.rip{--c:#cdd6cd}
-  .corner{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 20px)}
+  /* ER45 mini menu: four cover dots (01-04) + ARCHIVE. Identical in all four covers. */
+  .er45nav{position:fixed;top:12px;right:12px;z-index:100;display:flex;align-items:center;gap:6px;
+    max-width:calc(100vw - 16px);box-sizing:border-box;padding:3px 6px 3px 3px;border-radius:8px;
+    background:rgba(8,10,16,.74);border:2px solid rgba(255,255,255,.18);box-shadow:0 2px 0 rgba(0,0,0,.35);
+    -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);margin:0}
+  .er45nav .er45dots{display:flex}
+  .er45nav .er45dot{position:relative;display:grid;place-items:center;width:34px;height:34px;box-sizing:border-box;
+    text-decoration:none;-webkit-tap-highlight-color:transparent;outline:none}
+  .er45nav .er45dot i{display:block;width:12px;height:12px;box-sizing:border-box;border:2px solid var(--a);
+    border-radius:2px;background:transparent;transition:transform .1s,background .15s,box-shadow .15s}
+  .er45nav .er45dot:hover i,.er45nav .er45dot:focus-visible i{transform:scale(1.3);background:var(--a);opacity:.85}
+  .er45nav .er45dot[aria-current="page"] i{background:var(--a);opacity:1;box-shadow:0 0 8px var(--a)}
+  .er45nav .er45dot:focus-visible{outline:2px dashed var(--a);outline-offset:-3px;border-radius:4px}
+  .er45nav .er45dot em{position:absolute;top:calc(100% + 6px);right:0;white-space:nowrap;pointer-events:none;
+    font:normal 7px/1 'Press Start 2P',ui-monospace,monospace;letter-spacing:.04em;color:var(--a);
+    background:rgba(8,10,16,.94);border:2px solid var(--a);border-radius:3px;padding:.7em .8em;
+    opacity:0;visibility:hidden;transition:opacity .12s}
+  .er45nav .er45dot:hover em,.er45nav .er45dot:focus-visible em{opacity:1;visibility:visible}
+  .er45nav .er45arch{font:10px/1 'Press Start 2P',ui-monospace,monospace;letter-spacing:.04em;white-space:nowrap;
+    color:#e9eef0;text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;border-radius:4px;
+    padding:.8em .85em;text-shadow:0 0 8px currentColor;background:rgba(255,255,255,.05);
+    transition:transform .1s,filter .15s}
+  .er45nav .er45arch:hover,.er45nav .er45arch:focus-visible{filter:brightness(1.3)}
+  .er45nav .er45arch:active{transform:translateY(2px);border-bottom-width:2px}
+  @media (hover:none){ .er45nav .er45dot em{display:none} }
+  @media (max-width:420px){
+    .er45nav{top:8px;right:8px;gap:4px;padding:2px 5px 2px 2px}
+    .er45nav .er45dot{width:32px;height:32px}
+    .er45nav .er45arch{font-size:8px;padding:.75em .7em}
+  }
+  @media (max-width:330px){ .er45nav{flex-wrap:wrap;justify-content:flex-end} }
+  @media (prefers-reduced-motion:reduce){ .er45nav *{transition:none!important} }
 
   .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
@@ -86,11 +105,10 @@
   #toast i{font-style:normal;color:#c2185b}
 
   @media (max-width:480px){
-    .plink{font-size:8px;padding:.8em} .corner{gap:8px;top:10px;right:10px}
     .cap{font-size:7px;left:10px;bottom:10px} .cap small{font-size:6px}
     #toast{font-size:8px;bottom:70px}
   }
-  @media (prefers-reduced-motion: reduce){ #toast{transition:none} .plink{transition:none} }
+  @media (prefers-reduced-motion: reduce){ #toast{transition:none} }
 </style>
 <script type="importmap">
 {
@@ -102,24 +120,34 @@
 </script>
 </head>
 <body>
-<h1 class="sr">ER45 — 1:87 scale: a tilt-shift diorama of the ER45 club (cover proposal 03/04)</h1>
+<h1 class="sr">ER45 — 1:87 scale: a tilt-shift diorama of the ER45 club</h1>
 
 <canvas id="scene" role="img" aria-label="A tilt-shift photo of a 1:87 scale model nightclub on a wooden desk: a cut-away foam-board box with no roof. Inside, tiny figurines dance on a glowing tiled floor in front of a DJ booth with two spinning turntables and a mixer, under a truss of moving-head lights, green lasers and a pea-sized mirror ball; a little fog machine puffs smoke, an LED wall shows the ER45 logo, and go-go dancers move on two podiums, one in a cage. Outside, a queue waits at the door past a tiny bouncer. Around the model: a cutting mat with a centimetre ruler, a giant coffee cup, a tube of model glue, tweezers, a sticky note and a brass plaque reading ER45 CLUB, Zagreb 2002, scale 1:87."></canvas>
 
-<nav class="corner" aria-label="Site">
-  <a class="plink covers" href="/covers/" title="All four cover proposals">← COVERS</a>
-  <a class="plink archive" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
-  <a class="plink dynamic" href="/dynamic.html" title="ER45 — the needle still remembers">DYNAMIC</a>
-  <a class="plink rip" href="/rip.html" title="The memorial — R.I.P. ER45.COM">R.I.P.</a>
-</nav>
+<nav class="er45nav" aria-label="ER45">
+    <span class="er45dots">
+      <a class="er45dot" data-cover="pixel" href="/?c=pixel" style="--a:#38c6f5" aria-label="ER45: Club Quest" title="01 · ER45: Club Quest"><i></i><em>01 CLUB QUEST</em></a>
+      <a class="er45dot" data-cover="voxel" href="/?c=voxel" style="--a:#7bf06a" aria-label="ER45 Block Party" title="02 · ER45 Block Party"><i></i><em>02 BLOCK PARTY</em></a>
+      <a class="er45dot" data-cover="diorama" href="/?c=diorama" style="--a:#ffb53d" aria-label="ER45 1:87 Scale" title="03 · ER45 1:87 Scale"><i></i><em>03 1:87 SCALE</em></a>
+      <a class="er45dot" data-cover="cartoon" href="/?c=cartoon" style="--a:#f46cf4" aria-label="The Bass Remains" title="04 · The Bass Remains"><i></i><em>04 BASS REMAINS</em></a>
+    </span>
+    <a class="er45arch" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
+  </nav>
+  <script>
+  /* mark the current cover's dot (filled + aria-current) */
+  (() => {
+    const m = document.querySelector('meta[name="er45-cover"]');
+    const cur = m ? m.content : ((location.pathname.match(/\/covers\/(\w+)/) || [])[1] || '');
+    document.querySelectorAll('.er45dot').forEach(a => { if (a.dataset.cover === cur) a.setAttribute('aria-current', 'page'); });
+  })();
+  </script>
 
-<div class="cap" id="cap"><b>TILT-SHIFT DIORAMA</b> · proposal 03/04<small id="caphint">ER45 CLUB · ZAGREB 2002 · SCALE 1:87 · move = focus · tap things</small></div>
+<div class="cap" id="cap"><b>TILT-SHIFT DIORAMA</b> · 03/04<small id="caphint">ER45 CLUB · ZAGREB 2002 · SCALE 1:87 · move = focus · tap things</small></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* No audio. Route every archive link to the archiv.er45.com subdomain in
-   production; keep the /archive/ path locally so the static server still works.
-   (The DYNAMIC link is a plain /dynamic.html path — works in both.) */
+   production; keep the /archive/ path locally so the static server still works. */
 (() => {
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||

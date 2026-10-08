@@ -1,25 +1,32 @@
-# ER45 — memorial site
+# ER45 — front page
 
-A dynamic, interactive memorial for **er45.com**, a Croatian techno/clubbing
-webzine (~2002 era). The domain is being revived through subdomains; anyone who
-lands on the bare `er45.com` root gets this memorial.
+The revived front page for **er45.com**, a Croatian techno/clubbing webzine
+(~2002 era). The domain is being revived through subdomains; anyone who lands on
+the bare `er45.com` root gets **one random scene out of four animated covers**.
 
 > "The lights went out, but the bass remains."
 
 ## Files
-- **`index.html`** — the memorial, self-contained (no build step):
-  - Pixel-art club scene rendered into a low-res canvas buffer (turntables,
-    mixer, speaker stack with beat-punching woofers, moving-head lights, disco
-    ball, fog, heartbeat lines).
-  - **Music**: the real *DJ Rolando — Knights of the Jaguar (beatless edit)* via
-    a SoundCloud embed; a self-contained Web-Audio synth (no kick) is the fallback.
-    Swap the track via the `TRACK` constant near the top of the script.
-  - **Interactive**: "Pay Respects" raises a neon **glowstick** (count persisted
-    in `localStorage`); mute + fullscreen controls.
+- **`covers/`** — the four covers, each a self-contained animated scene with
+  hidden easter eggs (no build step, no audio):
+  - `pixel.html` — 01 *ER45: Club Quest* (16-bit pixel art)
+  - `voxel.html` — 02 *ER45 Block Party* (three.js voxel club)
+  - `diorama.html` — 03 *ER45 — 1:87 Scale* (tilt-shift model club)
+  - `cartoon.html` — 04 *The Bass Remains* (1930s rubber-hose cartoon)
+- **Front-page pick** — `worker.js` serves one of the four at `/` (no redirect,
+  `Cache-Control: no-store`). It is random but never the same cover twice in a
+  row (cookie `er45c` remembers the last one). `/?c=pixel|voxel|diorama|cartoon`
+  (or `?c=1`–`4`) forces a specific cover. Old pages (`/rip`, `/dynamic`,
+  `/er45-loop`, `/covers/`) redirect to `/`; direct `/covers/<name>` URLs work.
+- **Dot menu** — top-right on every cover: four dots (01–04, each in its cover's
+  accent colour, current one filled) switch scenes via `/?c=<name>`, plus an
+  **ARCHIVE** link to `archiv.er45.com`.
+- **`index.html`** — local-dev stand-in for the worker's pick (a static server has
+  no worker): picks/validates `?c=` and redirects to `/covers/<name>.html`.
 - **`favicon.svg`** — pixel **ER / 45** tile.
 
 ## archive.er45.com — the first real subdomain
-The memorial's tagline ("the infrastructure continues in the subdomains") is now
+The front page's tagline ("the infrastructure continues in the subdomains") is now
 literally true: **`archive/`** is a self-contained static site reconstructed from
 the original `er45` database.
 
@@ -29,7 +36,7 @@ the original `er45` database.
   - **Articles** — 144 DJ interviews / artist bios / reports, by category, click to read.
   - **Flyers** — 57 original event flyers (thumbnailed into `archive/assets/flyers/`).
 - **`archive/data/*.json`** — the data it runs on (copied from `data/`).
-- Linked from the memorial dock; locally it lives at `/archive/`.
+- Linked from the ARCHIVE button on every cover; locally it lives at `/archive/`.
 
 ## Decoded source data (`data/` + lists)
 Extracted from the original MySQL `er45` dump (Windows-1250) and the Access stores:
@@ -54,7 +61,7 @@ From this folder, start the static server and open the page:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .claude/serve.ps1
-# memorial:  http://127.0.0.1:8200/
+# front page: http://127.0.0.1:8200/   (random cover; /?c=voxel forces one)
 # archive:   http://127.0.0.1:8200/archive/
 ```
 
@@ -63,7 +70,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .claude/serve.ps1
 ## Deploy (Cloudflare)
 **One** static-asset Worker (`er45`) serves both sites, routed by hostname in
 `worker.js` (see **`DEPLOY.md`**):
-- `er45.com` + `www.er45.com` → the memorial (`index.html`).
+- `er45.com` + `www.er45.com` → the front page: a random one of the four covers (`covers/`).
 - `archiv.er45.com` → the archive (rewritten onto the `archive/` subtree).
 
 All three are custom domains on the one worker; `git push` redeploys.

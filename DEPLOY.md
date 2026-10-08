@@ -1,15 +1,16 @@
-# Going live on Cloudflare — er45.com (memorial) + archiv.er45.com (archive)
+# Going live on Cloudflare — er45.com (front page) + archiv.er45.com (archive)
 
 Both sites are **static** (HTML + JSON + images) and are served by **one**
 Cloudflare static-asset Worker (`er45`), routed by hostname in `worker.js`:
 
 | Hostname | Serves |
 |----------|--------|
-| `er45.com` + `www.er45.com` | the memorial (`index.html`) |
+| `er45.com` + `www.er45.com` | the front page — `worker.js` serves a random one of the four `covers/` at `/` (`?c=<cover>` forces one; cookie `er45c` avoids repeats) |
 | `archiv.er45.com` | the archive — `worker.js` rewrites it onto the `/archive/` subtree |
 
 `run_worker_first = true` (in `wrangler.toml`) lets the script run before static
-assets are matched, so it can map `archiv.er45.com/<path>` → `/archive/<path>`.
+assets are matched, so it can map `archiv.er45.com/<path>` → `/archive/<path>` and pick the
+front-page cover for `/`. Retired paths (`/rip`, `/dynamic`, `/er45-loop`, `/covers/`) redirect to `/`.
 The cross-links also auto-switch in production; on localhost they stay path-based.
 
 Repo: **github.com/patrikpencinger-ai/er45** (`main`).
@@ -41,7 +42,7 @@ Repo: **github.com/patrikpencinger-ai/er45** (`main`).
   wrangler deploy       # from the repo root
   ```
 
-After it deploys: `https://er45.com` and `https://www.er45.com` show the memorial;
+After it deploys: `https://er45.com` and `https://www.er45.com` show a random cover (reload to see another);
 `https://archiv.er45.com` shows the archive.
 
 ---
@@ -53,4 +54,4 @@ Two roots, **nginx:**
 server { server_name er45.com www.er45.com; root /var/www/er45;        index index.html; }
 server { server_name archiv.er45.com;        root /var/www/er45/archive; index index.html; }
 ```
-(No Worker script needed here — each vhost points straight at its folder.)
+(No Worker script needed here — each vhost points straight at its folder; the root `index.html` picks a cover client-side.)

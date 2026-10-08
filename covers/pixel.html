@@ -35,8 +35,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ER45 · Club Quest (pixel art cover)</title>
+<meta name="er45-cover" content="pixel" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<meta name="description" content="ER45: CLUB QUEST — a 16-bit side-scrolling club level. Cover proposal 01/04 (pixel art)." />
+<meta name="description" content="ER45: CLUB QUEST — a 16-bit side-scrolling club level." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -54,24 +55,41 @@
       radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,0,.38) 100%),
       repeating-linear-gradient(to bottom, rgba(0,0,0,.10) 0 1px, rgba(0,0,0,0) 1px 3px)}
 
-  /* top-right pixel links (copied from index.html) */
-  .corner{position:fixed;top:14px;right:14px;z-index:10;display:flex;gap:10px}
-  .plink{font-family:'Press Start 2P',ui-monospace,monospace;font-size:10px;line-height:1;letter-spacing:.04em;
-    color:var(--c,#e9eef0);text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;
-    background:rgba(8,12,20,.55);padding:.85em .95em;border-radius:4px;
-    text-shadow:0 0 8px currentColor;box-shadow:0 0 0 2px rgba(0,0,0,.25);
-    transition:transform .1s, filter .15s}
-  .plink:hover{filter:brightness(1.25)}
-  .plink:active{transform:translateY(2px);border-bottom-width:2px}
-  .plink.covers{--c:#ffe14a}
-  .plink.archive{--c:#38c6f5}
-  .plink.dynamic{--c:#f46cf4}
-  .plink.rip{--c:#cdd6cd}
+  /* ER45 mini menu: four cover dots (01-04) + ARCHIVE. Identical in all four covers. */
+  .er45nav{position:fixed;top:12px;right:12px;z-index:100;display:flex;align-items:center;gap:6px;
+    max-width:calc(100vw - 16px);box-sizing:border-box;padding:3px 6px 3px 3px;border-radius:8px;
+    background:rgba(8,10,16,.74);border:2px solid rgba(255,255,255,.18);box-shadow:0 2px 0 rgba(0,0,0,.35);
+    -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);margin:0}
+  .er45nav .er45dots{display:flex}
+  .er45nav .er45dot{position:relative;display:grid;place-items:center;width:34px;height:34px;box-sizing:border-box;
+    text-decoration:none;-webkit-tap-highlight-color:transparent;outline:none}
+  .er45nav .er45dot i{display:block;width:12px;height:12px;box-sizing:border-box;border:2px solid var(--a);
+    border-radius:2px;background:transparent;transition:transform .1s,background .15s,box-shadow .15s}
+  .er45nav .er45dot:hover i,.er45nav .er45dot:focus-visible i{transform:scale(1.3);background:var(--a);opacity:.85}
+  .er45nav .er45dot[aria-current="page"] i{background:var(--a);opacity:1;box-shadow:0 0 8px var(--a)}
+  .er45nav .er45dot:focus-visible{outline:2px dashed var(--a);outline-offset:-3px;border-radius:4px}
+  .er45nav .er45dot em{position:absolute;top:calc(100% + 6px);right:0;white-space:nowrap;pointer-events:none;
+    font:normal 7px/1 'Press Start 2P',ui-monospace,monospace;letter-spacing:.04em;color:var(--a);
+    background:rgba(8,10,16,.94);border:2px solid var(--a);border-radius:3px;padding:.7em .8em;
+    opacity:0;visibility:hidden;transition:opacity .12s}
+  .er45nav .er45dot:hover em,.er45nav .er45dot:focus-visible em{opacity:1;visibility:visible}
+  .er45nav .er45arch{font:10px/1 'Press Start 2P',ui-monospace,monospace;letter-spacing:.04em;white-space:nowrap;
+    color:#e9eef0;text-decoration:none;border:2px solid currentColor;border-bottom-width:4px;border-radius:4px;
+    padding:.8em .85em;text-shadow:0 0 8px currentColor;background:rgba(255,255,255,.05);
+    transition:transform .1s,filter .15s}
+  .er45nav .er45arch:hover,.er45nav .er45arch:focus-visible{filter:brightness(1.3)}
+  .er45nav .er45arch:active{transform:translateY(2px);border-bottom-width:2px}
+  @media (hover:none){ .er45nav .er45dot em{display:none} }
+  @media (max-width:420px){
+    .er45nav{top:8px;right:8px;gap:4px;padding:2px 5px 2px 2px}
+    .er45nav .er45dot{width:32px;height:32px}
+    .er45nav .er45arch{font-size:8px;padding:.75em .7em}
+  }
+  @media (max-width:330px){ .er45nav{flex-wrap:wrap;justify-content:flex-end} }
+  @media (prefers-reduced-motion:reduce){ .er45nav *{transition:none!important} }
 
   /* screen-reader / keyboard fallback */
   .sr{position:absolute;left:-9999px}
-  @media (max-width:480px){ .plink{font-size:8px;padding:.8em} .corner{gap:8px;top:10px;right:10px} }
-  @media (max-width:360px){ .corner{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 20px)} }
 
   .cap{position:fixed;left:12px;bottom:10px;z-index:5;pointer-events:none;
     font-family:'Press Start 2P',ui-monospace,monospace;font-size:8px;line-height:1.4;letter-spacing:.05em;
@@ -81,22 +99,32 @@
 </style>
 </head>
 <body>
-  <h1 class="sr">ER45: Club Quest — pixel art cover (proposal 01/04)</h1>
+  <h1 class="sr">ER45: Club Quest — pixel art cover</h1>
   <canvas id="game" role="img" aria-label="Animated 16-bit pixel-art club level that scrolls sideways: a DJ with two spinning turntables and a mixer under an ER45 LED wall, moving-head beams and lasers through haze, a mirror ball, a coughing smoke machine with fog rolling over the floor, go-go dancers in a cage and on a podium, a dancing crowd with speech bubbles, a bar, a toilet queue that never moves, and a video-game HUD."></canvas>
   <div class="crt" aria-hidden="true"></div>
 
-  <nav class="corner">
-    <a class="plink covers" href="/covers/" title="All four cover proposals">&larr; COVERS</a>
-    <a class="plink archive" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
-    <a class="plink dynamic" href="/dynamic.html" title="ER45 — the needle still remembers">DYNAMIC</a>
-    <a class="plink rip" href="/rip.html" title="The memorial — R.I.P. ER45.COM">R.I.P.</a>
+  <nav class="er45nav" aria-label="ER45">
+    <span class="er45dots">
+      <a class="er45dot" data-cover="pixel" href="/?c=pixel" style="--a:#38c6f5" aria-label="ER45: Club Quest" title="01 · ER45: Club Quest"><i></i><em>01 CLUB QUEST</em></a>
+      <a class="er45dot" data-cover="voxel" href="/?c=voxel" style="--a:#7bf06a" aria-label="ER45 Block Party" title="02 · ER45 Block Party"><i></i><em>02 BLOCK PARTY</em></a>
+      <a class="er45dot" data-cover="diorama" href="/?c=diorama" style="--a:#ffb53d" aria-label="ER45 1:87 Scale" title="03 · ER45 1:87 Scale"><i></i><em>03 1:87 SCALE</em></a>
+      <a class="er45dot" data-cover="cartoon" href="/?c=cartoon" style="--a:#f46cf4" aria-label="The Bass Remains" title="04 · The Bass Remains"><i></i><em>04 BASS REMAINS</em></a>
+    </span>
+    <a class="er45arch" data-archive href="/archive/" title="The party chronology, articles &amp; flyers">ARCHIVE</a>
   </nav>
-  <div class="cap" aria-hidden="true"><b>PIXEL ART</b> · ER45: CLUB QUEST<br>proposal 01/04</div>
+  <script>
+  /* mark the current cover's dot (filled + aria-current) */
+  (() => {
+    const m = document.querySelector('meta[name="er45-cover"]');
+    const cur = m ? m.content : ((location.pathname.match(/\/covers\/(\w+)/) || [])[1] || '');
+    document.querySelectorAll('.er45dot').forEach(a => { if (a.dataset.cover === cur) a.setAttribute('aria-current', 'page'); });
+  })();
+  </script>
+  <div class="cap" aria-hidden="true"><b>PIXEL ART</b> · ER45: CLUB QUEST<br>01/04</div>
 
 <script>
 /* No audio. Route every archive link to the archiv.er45.com subdomain in
-   production; keep the /archive/ path locally so the static server still works.
-   (The DYNAMIC link is a plain /dynamic.html path — works in both.) */
+   production; keep the /archive/ path locally so the static server still works. */
 (() => {
   const h = location.hostname;
   const isLocal = h==='' || h==='localhost' || h==='127.0.0.1' ||
@@ -116,7 +144,7 @@
 const cv = document.getElementById('game');
 const ctx = cv && cv.getContext('2d', { alpha: false });
 if (!ctx) return;
-const navEl = document.querySelector('.corner');
+const navEl = document.querySelector('.er45nav');
 
 /* ================================================================ constants */
 const TAU = Math.PI * 2;
