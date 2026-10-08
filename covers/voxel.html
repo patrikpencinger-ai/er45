@@ -36,6 +36,7 @@
   13. gogo-spin      — tap a go-go dancer → signature 360° spin + hop, toast "Go-go certified".
   Hint: console teaser line; the caption has a tooltip.
 -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -892,16 +893,21 @@ let userCam = false, holdUntil = 0, blend = 1;
 const cPos = new THREE.Vector3(), cTgt = new THREE.Vector3(), fromPos = new THREE.Vector3(), fromTgt = new THREE.Vector3();
 controls.addEventListener('start', () => { userCam = true; activity(); });
 controls.addEventListener('end', () => { userCam = false; holdUntil = performance.now() + 3500; });
-let isPortrait = false;
+let isPortrait = false, portR = 29;   // portR: portrait orbit radius, recomputed in resize() so the whole stage fits the width
 function camPath(t, pos, tgt) {
-  if (isPortrait) { const sx = Math.sin(t * 0.045); const tx = 5.0 * sx * sx * sx; const r = 14.5 + 0.8 * Math.sin(t * 0.05);
-    tgt.set(tx, 4.9, -8.6); pos.set(tx * 0.55 + 1.2 * Math.sin(t * 0.07), 5.7 + 0.5 * Math.sin(t * 0.08), -8.6 + r); }
+  // portrait: pulled back + wide FOV so the full LED wall, booth, both podiums and the FOG block stay in frame; only a gentle sway
+  if (isPortrait) { const sx = Math.sin(t * 0.045); const tx = 0.4 * sx; const r = portR + 0.5 * Math.sin(t * 0.05);
+    tgt.set(tx, 1.4, -8.2); pos.set(tx + 1.0 * Math.sin(t * 0.07), 12.5 + 0.8 * Math.sin(t * 0.08), -8.6 + r); }
   else { const a = 0.6 * Math.sin(t * 0.055) + 0.1 * Math.sin(t * 0.17); const r = (16 + 2 * Math.sin(t * 0.043)) * (camera.aspect < 1.25 ? 1.12 : 1);
     pos.set(Math.sin(a) * r, 7.6 + 0.8 * Math.sin(t * 0.08), -3 + Math.cos(a) * r); tgt.set(-Math.sin(a) * 1.2, 3.5, -7); }
 }
 function resize() {
   const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h;
-  isPortrait = camera.aspect < 0.85; camera.fov = isPortrait ? 66 : (camera.aspect < 1.25 ? 54 : 45); camera.updateProjectionMatrix();
+  isPortrait = camera.aspect < 0.85; camera.fov = isPortrait ? 78 : (camera.aspect < 1.25 ? 54 : 45); camera.updateProjectionMatrix();
+  if (isPortrait) { // fit stage half-width (podium edge 9.5 + sway + margin) at the podium plane (z=-5.6) to the horizontal FOV
+    const tanH = Math.tan(camera.fov * Math.PI / 360) * camera.aspect; portR = Math.max(14.5, 10.0 / tanH + 3); }
+  controls.maxDistance = isPortrait ? portR + 14 : 28;
+  scene.fog.near = isPortrait ? portR + 14 : 28; scene.fog.far = isPortrait ? portR + 50 : 64;
 }
 addEventListener('resize', resize); resize();
 

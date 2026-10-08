@@ -153,6 +153,7 @@ function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let 
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
 const lerp = (a,b,t) => a + (b - a) * t;
+const mod = (x, n) => ((x % n) + n) % n;   // negative-safe modulo (array indexing from time/beat values)
 const smooth = t => { t = clamp(t,0,1); return t*t*(3-2*t); };
 const easeOutBack = t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2); };
 const easeInOut = t => { t = clamp(t,0,1); return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; };
@@ -798,10 +799,10 @@ function pose(f, bt){
     case 'dj': {
       p.nod = .3 * bounce * amp; p.bob = .04 * bounce * amp;
       p.aRx = -1.3; p.aRz = .28 + (rewindUntil > T ? .25 * Math.sin(tickN * 2.5) : .06 * Math.sin(tickN * 1.7));
-      if (Math.floor(bt / 8) % 2 === 0){ p.aLx = -.5; p.aLz = -2.45; } else { p.aLx = -1.25; p.aLz = -.15; }
+      if (mod(Math.floor(bt / 8), 2) === 0){ p.aLx = -.5; p.aLz = -2.45; } else { p.aLx = -1.25; p.aLz = -.15; }
       break; }
     case 'gogo': {
-      const bar = Math.floor(bt / 4) % 2;
+      const bar = mod(Math.floor(bt / 4), 2);
       p.lean = .16 * b2 * amp; p.turn = .45 * Math.sin(bt * .25 + f.phase * 3) * amp; p.bob = .06 * bounce * amp;
       if (bar === 0){ p.aLx = -2.9; p.aLz = -.15 - .35 * b2 * amp; p.aRx = -.3; p.aRz = .55; }
       else { p.aLx = -2.7; p.aLz = -.5; p.aRx = -2.7; p.aRz = .5 + .3 * b2 * amp; }
@@ -1113,7 +1114,7 @@ function drawLED(bt){
   if (reduced && mode === 'rewind') mode = 'main';
   const st = Math.floor(T * 12);
   g.fillStyle = '#05030a'; g.fillRect(0, 0, W, H);
-  const hue = HUE[Math.floor(bt / 4) % HUE.length];
+  const hue = HUE[mod(Math.floor(bt / 4), HUE.length)];
   if (mode === 'main' || mode === 'bass'){
     for (let s = 6; s > 0; s--) txt(g, 'ER45', 168 + s * 2, 70 + s * 2, 118, F_BEBAS, `hsl(${(hue + 180) % 360},70%,${10 + s * 3}%)`);
     txt(g, 'ER45', 168, 70, mode === 'bass' ? 118 + 14 * k : 118, F_BEBAS, `hsl(${hue},100%,${60 + 10 * k}%)`);
@@ -1130,7 +1131,7 @@ function drawLED(bt){
     txt(g, 'PULSE', 200, 76, 120, F_BEBAS, '#fff'); txt(g, 'AQUARIUS · SUBOTA 23H', 470, 50, 13, F_PIX, '#fff'); txt(g, 'ULAZ 40 KN', 470, 84, 26, F_PIX, '#2a0b20');
     txt(g, 'djs: frajman · kiki · felver', 470, 124, 30, F_HAND, '#fff', 'center', 300, '600');
   } else if (mode === 'llama' || mode === 'llamafm'){
-    const bob = (bI % 2) * 6;
+    const bob = mod(bI, 2) * 6;
     for (let y = 0; y < LLAMA_PX.length; y++) for (let x = 0; x < LLAMA_PX[y].length; x++){ const ch = LLAMA_PX[y][x]; if (ch === '.') continue;
       g.fillStyle = ch === 'o' ? '#111' : '#f5f0e6'; g.fillRect(40 + x * 9, 20 + y * 9 + (y < 8 ? bob : 0), 9, 9); }
     txt(g, 'LLAMA FM', 400, 46, 64, F_BEBAS, '#ffd23f'); txt(g, 'it really whips.', 400, 96, 34, F_HAND, '#fff', 'center', 0, '600');
@@ -1178,7 +1179,7 @@ function drawLED(bt){
 }
 const FLOOR_COLS = [[255, 63, 180], [47, 230, 255], [255, 177, 59], [138, 91, 255], [182, 255, 58]];
 function drawFloor(bt){
-  const g = floorCv.g, bI = Math.floor(bt), k = Math.exp(-(bt - bI) * 4), bar = Math.floor(bI / 4) % 4;
+  const g = floorCv.g, bI = Math.floor(bt), k = Math.exp(-(bt - bI) * 4), bar = mod(Math.floor(bI / 4), 4);
   g.fillStyle = '#000'; g.fillRect(0, 0, 144, 96);
   for (let i = 0; i < 9; i++) for (let j = 0; j < 6; j++){
     let on, b;
@@ -1193,7 +1194,7 @@ function drawFloor(bt){
       b = on ? .5 + .45 * k : .06;
     }
     if (afterOn) b *= .45;
-    const c = FLOOR_COLS[(i + j + bar) % FLOOR_COLS.length];
+    const c = FLOOR_COLS[mod(i + j + bar, FLOOR_COLS.length)];
     g.fillStyle = `rgb(${c[0] * b | 0},${c[1] * b | 0},${c[2] * b | 0})`; g.fillRect(i * 16 + 1, j * 16 + 1, 14, 14);
   }
   floorTex.needsUpdate = true;
@@ -1268,20 +1269,20 @@ addEventListener('resize', () => { PR = Math.min(PR, pickPR()); applySize(); });
    13. camera + focus
    ===================================================================== */
 const camTarget = new THREE.Vector3(), camGoal = new THREE.Vector3(), _v = new THREE.Vector3(), _v2 = new THREE.Vector3();
-const FOCUS_PT = new THREE.Vector3(0, 1.4, -1.8), LED_PT = new THREE.Vector3(0, 5.4, IN.z0 + .3);
+const FOCUS_PT_P = new THREE.Vector3(0, 2.6, -4.8), FOCUS_PT = new THREE.Vector3(0, 1.4, -1.8), LED_PT = new THREE.Vector3(0, 5.4, IN.z0 + .3);
 let focusY = .5, focusHoldUntil = 0, focusPointerY = .5, focusLedUntil = 0, parX = 0, parY = 0, pX = 0, pY = 0, camPull = 1;
 let camInit = false;
 function updateCamera(dt){
   const t = reduced ? 0 : T;
   const vf = Math.tan(camera.fov * Math.PI / 360), asp = VW / VH;
-  const fitW = portrait ? 37 : 66, fitH = portrait ? 34 : 30;
+  const fitW = portrait ? 19.5 : 66, fitH = portrait ? 34 : 30;   // portrait: crop to the LED wall + booth + dance floor (the slow pan below reveals the sides)
   let dist = Math.max(fitW / (2 * vf * asp), fitH / (2 * vf));
   const catOn = cat.visible ? 1 : 0;
   camPull = lerp(camPull, 1 + catOn * .18, Math.min(1, dt * .8));
   dist *= camPull * (1 + .04 * Math.sin(t * .06));
   const az = (portrait ? .04 : .12) + (portrait ? .14 : .3) * Math.sin(t * .045) + parX * .06;
-  const el = (portrait ? .9 : .8) + .06 * Math.sin(t * .037 + 1) + parY * .04;
-  camTarget.set((portrait ? .6 : 1.6) + (portrait ? 1.0 : 3) * Math.sin(t * .041), 1.2, (portrait ? 0 : .5) + 1.2 * Math.sin(t * .05));
+  const el = (portrait ? .84 : .8) + .06 * Math.sin(t * .037 + 1) + parY * .04;
+  camTarget.set((portrait ? .6 : 1.6) + (portrait ? 4.5 * Math.sin(t * .06) : 3 * Math.sin(t * .041)), portrait ? 2.4 : 1.2, (portrait ? -2.4 : .5) + 1.2 * Math.sin(t * .05));
   camGoal.set(camTarget.x + dist * Math.sin(az) * Math.cos(el), camTarget.y + dist * Math.sin(el), camTarget.z + dist * Math.cos(az) * Math.cos(el));
   if (!camInit){ camera.position.copy(camGoal); camInit = true; } else camera.position.lerp(camGoal, Math.min(1, dt * 2.5));
   camera.lookAt(camTarget);
@@ -1291,7 +1292,7 @@ function updateFocus(dt){
   let goal;
   if (focusLedUntil > T){ _v.copy(LED_PT).add(model.position).project(camera); goal = (_v.y + 1) / 2; }
   else if (focusHoldUntil > T) goal = focusPointerY;
-  else { _v.copy(FOCUS_PT).project(camera); goal = (_v.y + 1) / 2; }
+  else { _v.copy(portrait ? FOCUS_PT_P : FOCUS_PT).project(camera); goal = (_v.y + 1) / 2; }
   focusY = lerp(focusY, clamp(goal, .05, .95), Math.min(1, dt * (focusLedUntil > T ? 1.6 : 3)));
   tiltH.uniforms.focusY.value = tiltV.uniforms.focusY.value = focusY;
 }
@@ -1515,10 +1516,10 @@ function doTick(){
 }
 function updateLights(dt){
   const sp = reduced ? .12 : 1, t = T * sp;
-  const pair = HEAD_COLS[Math.floor(beats / 4) % HEAD_COLS.length];
+  const pair = HEAD_COLS[mod(Math.floor(beats / 4), HEAD_COLS.length)];
   const fogBoost = overFogUntil > T ? .55 : 0;
   lightsAmt = lerp(lightsAmt, afterOn ? .35 : 1, Math.min(1, dt * 1.5));
-  const mode = Math.floor(beats / 16) % 3;
+  const mode = mod(Math.floor(beats / 16), 3);
   for (let k = 0; k < heads.length; k++){
     const h = heads[k];
     let tx, tz;
@@ -1536,7 +1537,7 @@ function updateLights(dt){
     h.decal.position.set(h.tx, .035, h.tz); h.decal.scale.setScalar(spread * 2.4 + .4); h.dm.color.setHex(col).multiplyScalar(.55 * lightsAmt);
   }
   // lasers: fade in every other 8-beat phrase
-  const want = (!reduced && Math.floor(beats / 8) % 2 === 1 && !afterOn) ? 1 : (reduced ? .25 : 0);
+  const want = (!reduced && mod(Math.floor(beats / 8), 2) === 1 && !afterOn) ? 1 : (reduced ? .25 : 0);
   for (let i = 0; i < lasers.length; i++){
     const a = -.75 + 1.5 * i / (lasers.length - 1) + .35 * Math.sin(t * .8), e = -.36 - .1 * Math.sin(t * .5 + i * .7);
     _dir.set(Math.sin(a) * Math.cos(e), Math.sin(e), Math.cos(a) * Math.cos(e));
@@ -1598,7 +1599,7 @@ function updateFog(dt){
     }
   }
   fog.update(dt, FOG_BOX, over ? .985 : .975);
-  const pair = HEAD_COLS[Math.floor(beats / 4) % HEAD_COLS.length];
+  const pair = HEAD_COLS[mod(Math.floor(beats / 4), HEAD_COLS.length)];
   fog.mat.uniforms.color.value.setHex(0xd9d2ff).lerp(_col.setHex(pair[0]), .22);
   fog.mat.uniforms.opacity.value = afterOn ? .6 : 1;
   fogLed.material.color.setHex(puffing || over ? 0x40ff60 : 0xff2a2a);
@@ -1696,7 +1697,7 @@ function updateOverlays(dt){
 function updateModelHop(){
   if (bassUntil > T){
     const bF = beats % 1, a = reduced ? .12 : .55;
-    model.position.y = a * Math.max(0, Math.sin(bF * Math.PI)) * (bF < .5 ? 1 : 1) * (Math.floor(beats) % 2 ? .8 : 1);
+    model.position.y = a * Math.max(0, Math.sin(bF * Math.PI)) * (bF < .5 ? 1 : 1) * (mod(Math.floor(beats), 2) ? .8 : 1);
     model.rotation.z = reduced ? 0 : .006 * Math.sin(beats * Math.PI);
   } else { model.position.y *= .8; model.rotation.z *= .8; if (Math.abs(model.position.y) < .001) model.position.y = 0; }
 }
@@ -1723,7 +1724,7 @@ function update(dt){
 function frame(now){
   if (!running) return;
   requestAnimationFrame(frame);
-  const real = Math.min(.25, (now - last) / 1000); last = now;
+  const real = Math.max(0, Math.min(.25, (now - last) / 1000)); last = now;   // lower clamp: first rAF timestamp can precede `last`
   const dt = Math.min(.05, real);
   update(dt);
   composer.render(dt);
