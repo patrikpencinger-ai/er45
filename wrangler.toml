@@ -4,7 +4,7 @@ main = "worker.js"
 
 # One Worker serves both sites, routed by hostname (see worker.js):
 #   archiv.er45.com         -> the /archive/ subtree (the archive)
-#   er45.com / www.er45.com -> the memorial (repo root, index.html)
+#   er45.com / www.er45.com -> front page: worker.js serves 1 of 4 random covers
 # run_worker_first lets the script rewrite the archive subdomain before assets
 # are matched; binding exposes the static files as env.ASSETS.
 [assets]
